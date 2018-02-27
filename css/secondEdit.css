@@ -1,0 +1,14 @@
+
+#persondataSider{
+    position:absolute;
+    left:0px;
+    height:694px;
+}
+
+#personDatainfoMain{
+    float:none;
+    position:absolute;
+    left:220px;
+    width:978px;
+    height:694px;
+}

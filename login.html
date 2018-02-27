@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html style="background: #507EFC;height: 100vh;min-height: 680px;">
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    	<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-control" content="no-cache">
+		<meta http-equiv="Cache" content="no-cache">
+	    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+	    <meta name="description" content="">
+	    <meta name="author" content="">
+	    <link rel="icon" href="">
+	    <link rel="Shortcut Icon" href="favicon.ico" >
+	    <link rel="Bookmark" href="favicon.ico" >
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/login.css"/>
+		<script type="text/javascript" src="js/domain.js"></script>
+		<title>登录</title>
+		<script type="text/javascript">
+			// 浏览器判断
+			var v = navigator.userAgent
+			var reg = "Mozilla"
+			var ie8low = v.indexOf(reg) >= 0
+			if(ie8low){
+				if(parseInt(v.charAt(8))<5){
+					window.location = "browserUpdate.html"
+				}
+			}
+		</script>
+	</head>
+	<!--<script type="text/javascript" src="js/require.js" data-main = "js/angular.min"></script>-->
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript">
+		var loginApp = angular.module("loginApp",[])
+		loginApp.controller('myCtrl',function($scope){
+		$scope.pwdErr = false 
+		$scope.noUser = false
+//		$(".nav-tabs li").css("background","#4153E8")
+		function getCookie(c_name){
+			if (document.cookie.length>0)
+			{ 
+			c_start=document.cookie.indexOf(c_name + "=")
+			if (c_start!=-1)
+			{ 
+			c_start=c_start + c_name.length+1 
+			c_end=document.cookie.indexOf(";",c_start)
+			if (c_end==-1) c_end=document.cookie.length
+			return unescape(document.cookie.substring(c_start,c_end))
+			} 
+			}
+			return ""
+		}
+			
+		function setCookie(c_name,value,expiredays){
+			var exdate=new Date()
+			exdate.setDate(exdate.getDate()+expiredays)
+			document.cookie=c_name+ "=" +escape(value)+
+			((expiredays==null) ? "" : "; expires="+exdate.toGMTString())
+		}
+			
+		function checkCookie(){
+			username=getCookie('username')
+			pwd=getCookie('pwd')
+			if (username!=null && username!="" && pwd!=null && pwd!=""){
+				$scope.username = username;
+				$scope.password = pwd;
+			}
+		}
+		checkCookie()
+		$("#remind").prop("checked","checked")
+
+		$("ul.nav-tabs li").click(function(){
+			$("ul.nav-tabs li").css('background','#4153E8')
+			$("ul.nav-tabs li").css('color','#FFF')
+			$(this).css('background','#FFF')
+			$(this).css('color','#000')
+			$("div.body").css('display','none')
+			$("div.body").eq($(this).index()).css('display','block')
+		})
+		$scope.login=function(){
+			if($("#remind").prop("checked")){
+				setCookie("username",$scope.username,30);
+				setCookie("pwd",$scope.password,30);
+			}
+			$.ajax({
+				type:"post",
+				url:domain+"/user/main/login",
+				async:true,
+				dataType:"json",
+				data:{
+					"user_name": $scope.username,
+					"user_password": $scope.password
+				},
+				success:function(data){
+					console.log(data)
+					if(data.code==1){
+						$scope.pwdErr = false
+						$scope.noUser = false
+						sessionStorage.clear()
+						sessionStorage.setItem('username',data.data.user_name)
+						sessionStorage.setItem('token',data.data.token)
+						sessionStorage.setItem('user_id',data.data.user_id)
+						sessionStorage.setItem('user_phone',data.data.user_phone)
+						sessionStorage.setItem('user_role_id',data.data.user_role_id)
+						sessionStorage.setItem('ischeck',data.data.ischeck)
+						sessionStorage.setItem('create_dateline',data.data.create_dateline)
+						sessionStorage.setItem('modify_dateline',data.data.modify_dateline)
+						sessionStorage.setItem('user_avatar',data.data.user_avatar)
+						sessionStorage.setItem('sm_name',data.data.sm_name)
+						sessionStorage.setItem('cm_name',data.data.cm_name)
+						sessionStorage.setItem('realname',data.data.user_realname)
+						window.location = "index.html"
+					}else{
+						$scope.pwdErr = true
+					}
+					$scope.$apply()
+				}
+			})
+		}
+		
+		$scope.register = function(){
+			$.ajax({
+				type:"post",
+				url:domain+"/user/main/add",
+				async:true,
+				dataType:"json",
+				data:{
+					"user_name": $scope.username1,
+					"user_password": $scope.password0
+				},
+				success:function(data){
+					console.log(data)
+					if(data.code==1){
+						alert("注册成功，正在前往登录页……")
+						window.location = "login.html"
+					}else{
+						alert("注册失败，请重新注册")
+					}
+				}
+			})
+		}
+		
+	})
+	</script>
+	<body ng-app="loginApp" ng-controller="myCtrl" style="width: 1200px;min-height: 680px;height: 100%;margin: 0 auto;background: #507EFC;position: relative;">
+		<div id="logo">
+			<img src="img/login/logo.png" style="margin-left:50%;width: 70px;height: auto;transform: translate(-50%);"/>
+			<!--<p style="text-align: center;font-size: 18px;">桐乡网校</p>-->			
+		</div>
+		<div id="main">
+			<ul class="nav nav-tabs" style="height: 44px;">
+			  <li role="presentation" style="width: 50%;height:100%;color: #000;background:#FFF;padding: 10px;text-align: center;font-size: 14px;cursor: pointer;">登录</li>
+			  <li role="presentation" style="width: 0px;height:100%;color: #FFF;background:#4153E8;color: #FFF;padding: 0px;text-align: center;font-size: 14px;cursor: pointer;display: none;"></li>
+			  <li role="presentation" style="width: 50%;height:100%;color: #FFF;background:#4153E8;color: #FFF;padding: 10px;text-align: center;font-size: 14px;cursor: pointer;">下载</li>
+			</ul>
+			<div class="login body">
+				<div class="left" style="width: 417px;margin: 0 auto;height: 100%;">
+					<form class="form-signin" >
+				        <input type="text" ng-model="username" id="inputEmail" class="form-control" placeholder="请输入用户名" required autofocus style="background-color: #FFF;width: 288px;height: 36px;"><br />
+				        <input type="password" ng-model="password" id="inputPassword" class="form-control" placeholder="请输入密码" required  style="width: 288px;height: 36px;">
+				        记住登录  <input type="checkbox" name="remind" id="remind" value="" />
+				        
+				        <div class="loginTip" style="height:20px;line-height: 20px;color: red;" ng-cloak>
+				        	<span class="loginTip" ng-show="pwdErr">用户名/密码错误</span>
+				        	
+				        	<span class="loginTip" ng-show="noUser">该用户不存在</span>
+				        </div>
+				        <p style="text-align: center;width: 288px;"></p>
+				        <!--<p style="text-align: center;width: 288px;"><a href="#">忘记密码</a></p>-->
+				        <br />
+				        <button class="btn btn-lg btn-primary btn-block" 
+				        	ng-click="login()" style="background: #4154E8;border-radius: 23px;height: 36px;padding: 0;text-align:center;line-height: 36px;width: 120px;margin-top: -20px;margin-left: 84px;">登 录</button>
+				       
+				        	
+			      </form>
+				</div>
+				<!--<hr style="width: 3px;height: 158px;background: #E4E4E4;float: left;"></hr>-->
+				<div class="right" style="width: 200px;height: 236px;float: right;">
+					<!--<p style="text-align: center;font-size: 18px;margin-top: 10px;">第三方登录</p>
+					<ul class="trdlog">
+						<li><img src="img/login/QQico.svg"/></li>
+						<li><img src="img/login/wxin-ico.svg"/></li>
+						<li><img src="img/login/wb-ico.svg"/></li>
+						<li><img src="img/login/wxiao-ico.svg"/></li>
+					</ul>-->
+				</div>
+				
+			</div>
+			<div class="reg body" style="display: none;">
+				<form class="form-signin" >
+				        <input type="text" ng-model="username0" id="inputEmail0" class="form-control" placeholder="请输入用户名" required autofocus style="background-color: #FFF;width: 288px;height: 36px;"><br />
+				        <input type="password" ng-model="password0" id="inputPassword0" class="form-control" placeholder="密码" required style="background-color: #FFF;width: 288px;height: 36px;margin-top: -10px;">
+				        <input type="password" ng-model="password1" id="inputPassword1" class="form-control" placeholder="确认密码" required style="background-color: #FFF;width: 288px;height: 36px;">
+				        <div class="loginTip" style="height:20px;line-height: 20px;margin-bottom: 2px;color: red;" ng-cloak>
+				        	<span class="loginTip" ng-show="name_exist">用户名已存在</span>
+				        	
+				        	<span class="loginTip" ng-show="password0 != password1">两次密码不一样</span>
+				        </div>
+				        <button class="btn btn-lg btn-primary btn-block" 
+				        	ng-click="register()" style="background: #4154E8;border-radius: 23px;width: 120px;height: 36px;margin-left: 84px;padding: 0;line-height: 36px;font-size: 16px;">立即注册</button>
+				        	<br />
+			      </form>
+			</div>
+			<div class="download body" style="display: none;">
+				<div style="float: left;width: 45%;padding-top: 30px;">
+					<img src="img/login/download.png" style="width:120px;height: auto;display: inline-block;margin-left: 80px;vertical-align: 20px;"/>
+					<p style="text-align: center;">扫描二维码下载</p>
+				</div>
+				<div style="float: left;width: 9%;">
+					<p id="" style="width: 1px;height: 90px;background: #EEE;margin: 0 auto;"></p>
+					<p style="text-align: center;line-height: 30px;font-size: 18px;color: #CCC;margin: 0;">或</p>
+					<p id="" style="width: 1px;height: 90px;background: #EEE;margin: 0 auto;"></p>
+				</div>
+				<div style="float: left;width: 45%;padding-top: 30px;">
+					<div id="" style="padding-left: 20px;height: 60px;">
+						<span style="width: 80px;display: inline-block;">iPhone</span> 
+						<a style="display: inline-block;background: #555;color: #FFF;height: 40px;padding: 5px;border-radius: 3px;width: 120px;cursor: pointer;text-decoration: none;" href="https://itunes.apple.com/cn/app/%E6%A1%90%E4%B9%A1%E7%BD%91%E6%A0%A1/id1122581314?mt=8" target="_blank">
+							<img src="img/login/apple.png" style="height: 30px;width: auto;"/>
+							App Store
+						</a>
+					</div>
+					<div id="" style="padding-left: 20px;height: 60px;">
+						<span style="width: 80px;display: inline-block;">Android</span> 
+						<a style="display: inline-block;background: #7FC13E;color: #FFF;height: 40px;padding: 5px;border-radius: 3px;width: 120px;cursor: pointer;text-decoration: none;" href="http://yun.txhlwxx.com/client/app-release.apk">
+							<img src="img/login/android.png" style="height: 30px;width: auto;"/>
+							Android
+						</a>
+					</div>
+				</div>
+				
+				
+			</div>
+		</div>
+		<img id="log_back" src="img/login/log_back.png" style="width: 1200px;height: auto;"/>
+	</body>
+	<script src="https://s22.cnzz.com/z_stat.php?id=1264448747&web_id=1264448747" language="JavaScript"></script>
+</html>

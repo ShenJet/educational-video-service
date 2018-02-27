@@ -1,0 +1,114 @@
+﻿<CuPlayer>
+ <Player_Set 
+		JcScpBufferTime = "3"
+ 		JcScpVolume = "100"
+		JcScpCode = "utf8"
+ 		JcScpImgDisplay = "no"
+		JcScpAutoHideControl="yes"
+		JcScpControlHideTime="0.5"
+		JcScpControlHeight="40"	
+		JcScpShowList= "no"
+		JcScpAutoRepeat = "no"
+		JcScpsetMode = "1"
+		JcScpAFrontCanClose = "no"
+		JcScpShowRightmenu = "no"
+		JcScpShareMode = "site"
+		JcScpLoadbarMode = "0"
+        JcScpLiveMode  = "1"
+	/>
+	
+	<Core_Set
+ 		JcScpMenuInfo = "苏州博智电子科技有限公司"
+ 		JcScpMenuLink = "http://www.bozedu.net/"
+ 		JcScpMinilogoPath = ""
+		JcScpMinilogoLink  =  "http://www.bozedu.net/"
+	/>
+
+      <Logo_Set
+ 		JcScpLogoDisplay = "no"
+ 		JcScpLogoPath = "images/logo.png"
+ 		JcScpLogoPosition = "top-left"
+		JcScpLogoWidth = "150"
+ 		JcScpLogoHeight = "70"
+ 		JcScpLogoAlpha = "0.2"
+	/>
+
+      <Flashvars_Set 
+		JcScpAutoPlay = "yes"
+		JcScpServer  =""
+		JcScpVideoPath = ""
+		JcScpVideoPathHD = ""
+		JcScpImg ="images/startpic.jpg" 
+        JcScpTitle  = ""
+		JcScpStarTime = "0" 
+		JcScpEndTime = "0"
+ 
+		JcScpCuePointInfo = ""
+		JcScpCuePointTime = ""
+		
+		ShowJcScpAFront = "no"
+		JcScpCountDowns = "5"
+		JcScpCountDownsPosition = "top-right"
+		JcScpAFrontW = "730"
+		JcScpAFrontH = "454"
+		JcScpAFrontPath = ""
+		JcScpAFrontLink = "/"
+		 
+		ShowJcScpAVideo= "no"
+		JcScpAVideoServer= ""	
+		JcScpAVideoPath= ""	
+		JcScpAVideoLink= "/"
+		
+		ShowJcScpAPause = "no"
+		JcScpAPausePath = ""
+		JcScpAPauseW = "300"
+		JcScpAPauseH = "250"
+		JcScpAPauseLink= "/"
+		
+		ShowJcScpACorner = "no"
+		JcScpACornerPath= ""
+		JcScpACornerW = "90"
+		JcScpACornerH = "50"
+		JcScpACornerPosition = "top-right"
+		JcScpACornerLink = "/"
+ 
+		ShowJcScpAEnd = "no"
+		JcScpAEndPath = ""
+		JcScpAEndW = "400"
+		JcScpAEndH = "300"
+		JcScpAEndLink= "/"
+
+		ShowJcScpAMoveText = "no"
+		
+	 />
+
+	 <SkinColor_Set
+ 		JcScpBackcolor = "0x000000"
+        JcScpBackcolortop = "0x353535"
+        JcScpLightcolor = "0xcfcfcf"
+        
+        JcScpFontcolor = "0xffffff"
+        JcScptimebg = "0x393939"
+        
+        JcScpLoadbar = "0x00a0e9"
+        JcScpLoaded = "0x4d4b4b"
+        JcScpLoadbg = "0x222222"
+        JcScpPlayBtn = "0x2d2d2d"
+		
+        JcScpBar = "0xffffff" 
+	 />
+
+<news loop="true" textWidth="500" speed="30">
+	<li links=""></li>
+</news>
+
+
+  	<thumbnail> 
+		<filename></filename> 
+		<title>博智大数据</title> 
+		<url>http://www.bozedu.net</url> 
+		<target>_blank</target> 
+	</thumbnail> 
+	
+  
+</CuPlayer>

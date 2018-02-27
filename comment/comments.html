@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html ng-app="header" ng-controller="headerCtrl">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-control" content="no-cache">
+		<meta http-equiv="Cache" content="no-cache">
+		<title>用户评论</title>
+		<link rel="stylesheet" type="text/css" href="css/initialize.css"/>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/comment.css"/>
+		<link rel="Shortcut Icon" href="favicon.ico" >
+		<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript" src="js/angular.min.js"></script>
+		<!--<script type="text/javascript" src="js/comment.js"></script>-->
+	</head>
+	<style type="text/css">
+	
+	</style>
+	<body>
+		<!--section-->
+		<section>
+			<!--评论区域-->
+			<!--tab标签-->
+			<ul class="nav-head">
+				<li class="nav-tabs">评论问答</li>
+			</ul>
+			<ul id="comment">
+				<h1 ng-show='!comment_list'>暂无评论</h1>
+				<li ng-repeat="x in comment_list track by $index" class="comment_content">
+					<div class="comment_lr comment_l">
+						<div class="avatar">
+							<img ng-src="{{x.user_avatar}}"/>
+							<p class="user">{{x.user_realname}}</p>
+						</div>
+					</div>
+					<div class="comment_lr comment_r">
+						<p class="text_content">
+							{{x.cq_content}}
+						</p>
+						<p class="commenter_info">
+							<span>{{x.create_dateline*1000 | date:"yyyy-MM-dd HH:mm:ss"}}</span> | <span class="clickgood"></span>
+							<a href="javascript:void(0)" ng-click="clickGood(x.ca_id,x.is_set_good,x)">点赞({{x.good_num}})</a> 
+							 | <a href="javascript:void(0)" ng-click="getSecReply($index,1,10,x.cq_key_id,x.cq_key_type,x.cq_pid,x.ca_id)">回复{{x.cq_sub_num==0?'(0)':'('+x.cq_sub_num+')'}}</a>
+						</p>
+						<ul id="" class="{{'reply_2lv_'+x.ca_id}} reply_2lv_list">
+							<a ng-click="rollUpRply(x.ca_id)" style="color: #3F4DED;">>>收起回复<<</a>
+							<li ng-repeat="r in reply_2lv_list[$index]" class="">
+								
+								<p style="margin-bottom: 0;padding: 6px;"><i style="color: #3F4DED;">{{r.user_realname}} 的回复：</i> {{r.cq_content}}</p>
+							</li>
+							<!--分页-->
+							<ul class="pagination pagination2lv" id="{{'pagination2lv_'+x.ca_id}}" style="margin: 0;"></ul>
+							
+							<textarea name="reply_2lv_textarea" class="reply_2lv_textarea {{'reply_2lv_textarea_'+x.ca_id}}" rows="" cols=""></textarea>
+							<br />
+							<button ng-click="subComment2lv($index,x.cq_key_id,x.cq_key_type,x.cq_pid,x.ca_id)">回复</button>
+						</ul>
+					</div>
+				</li>
+				<ul class="pagination" id="pagination" style="margin-left:50%;transform: translate(-50%);"></ul>
+				<hr />
+				<textarea name="comment" id="commentArea" rows="" cols="" ></textarea>
+				<br />
+				<button ng-click="subComment()" class="replybtn_main">回复楼主</button>
+			</ul>
+		</section>
+	</body>
+	<script type="text/javascript" src="js/jqPaginator.js"></script>
+	<script type="text/javascript">
+		var headerApp = angular.module("header",[])
+		headerApp.controller("headerCtrl",function($scope,$http){
+			//预处理连接
+			var para = window.location.href.split('?')[1] //id=123&token=kasjhdhskd
+			console.log(para)
+			if(para){
+				var video_id = para.split('&')[0].split("=")[1]
+				console.log(para)
+				$scope.token = unescape(para.split('&')[1].split("=")[1])
+				console.log(para)
+			}else{
+				alert("参数传递错误")
+			}
+			
+			$scope.comment_list = []
+			$scope.cq_key_type = 2
+			//获取视频并播放
+			$.ajax({
+				type:"get",
+				url:"http://yun.txhlwxx.com/demand/course/detail/1",
+				dataType:'json',
+				data:{
+					id:video_id
+				},
+				success:function(res){
+//					console.log(res)
+					$scope.video_src = res.data.dc_video
+					$scope.intro = res.data.dc_abstract
+					$scope.title = res.data.dc_title
+
+					$scope.$apply()
+					
+					$scope.cq_key_id = res.data.dc_id
+					// 获取评论列表函数执行
+					$scope.getComments(1 ,10 ,res.data.dc_id ,2 );
+//					console.log($scope.comment_list)
+					//分页
+					$scope.paginationModel = {
+				        totalPages: $scope.totalpage,
+//				        totalCounts:100 ,
+//				        pageSize:10,
+				        visiblePages: 5,
+				        currentPage: 1,
+				        onPageChange: function (num, type) {
+				            $('#p1').text(type + '：' + num);
+				            // 点击分页符重新检索列表
+				            $scope.getComments(num ,10 ,$scope.cq_key_id ,$scope.cq_key_type )
+				        }
+				    }
+					$.jqPaginator('#pagination', $scope.paginationModel);
+				}
+			})
+			
+			// 获取提问列表
+			$scope.totalpage = 0
+			$scope.getComments = function(page ,limit ,cq_key_id ,cq_key_type ){
+				$.ajax({
+					type:"post",
+					url:"http://yun.txhlwxx.com/comment/question/index",
+					async:false,
+					dataType:"json",
+					data:{
+						token:$scope.token,
+						page:page,
+						limit:limit,
+						cq_key_id :cq_key_id,
+						cq_key_type:cq_key_type
+					},
+					success:function(res){
+//						console.log(res)
+						$scope.q_totalrows = res.data.total_rows
+						$scope.totalpage = Math.ceil(res.data.total_rows/10)
+						if(res.data.page_data.length>0){
+							$scope.comment_list = res.data.page_data
+						}else{
+							$scope.comment_list = []
+						}
+						
+//						console.log($scope.totalpage)
+						$scope.$apply()
+					}
+				});
+			}
+			
+			//发表提问
+			$scope.subComment= function(){
+				console.log($("#commentArea").val())
+				$.ajax({
+					type:"post",
+					url:"http://yun.txhlwxx.com/comment/question/add",
+					async:true,
+					dataType:"json",
+					data:{
+						token:$scope.token,//提问用户token
+					    comment_question: {
+					        cq_key_id: $scope.cq_key_id,     		//课程主键编号
+					        cq_key_type: $scope.cq_key_type,		 	//课程类型 1是直播,2是点播,3是微课 ,4是家庭教育
+					        cq_content: $("#commentArea").val()     //提问内容
+    						}
+					},
+					success:function(res){
+						console.log(res)
+						$("#commentArea").val("")
+						// 获取评论列表函数执行
+						$scope.getComments(1 ,10 ,$scope.cq_key_id ,2 );
+						if(res.code==1){
+							alert("回复成功！");
+							$("body").scrollTop(920);
+							$scope.reply_2lv_list[0]=[]
+							$("ul.reply_2lv_"+ca_id).css("display","none")
+						}else{
+							alert("回复失败！");
+						}
+					}
+				});
+			}
+			$scope.reply_2lv_list = []
+			$scope.getSecReplyInit = [true,true,true,true,true,true,true,true,true,true]
+			// 获取回答列表
+			$scope.getSecReply = function(index, page, limit, cq_key_id, cq_key_type, cq_pid,ca_id){
+				$("ul.reply_2lv_"+ca_id).css("display","block")
+				$.ajax({
+					type:"post",
+					url:"http://yun.txhlwxx.com/comment/question/index",
+					async:true,
+					dataType:"json",
+					data:{
+						page:page,
+						limit:limit,
+						cq_key_id:cq_key_id,
+						cq_key_type:cq_key_type,
+						cq_pid:ca_id
+					},
+					success:function(res){
+						//console.log(res)
+						var a_totalrows = parseInt(res.data.total_rows)
+						//console.log("total",a_totalrows)
+						if(res.data.page_data.length>0){
+							$scope.reply_2lv_list[index] = res.data.page_data
+//							console.log($scope.reply_2lv_list)
+//							console.log(index)
+						}else{
+							$scope.reply_2lv_list[index] = []
+						}
+						//分页
+						if(a_totalrows>0){
+							var paginationModel2lv = {
+								//totalPages: $scope.totalpage2lv,
+						        totalCounts:a_totalrows,
+						        pageSize:10,
+						        visiblePages: 5,
+						        currentPage: 1,
+						        onPageChange: function (num, type) {
+						            $('#p1').text(type + '：' + num);
+						            // 点击分页符重新检索列表
+						            $scope.getSecReply(index, num, 10, cq_key_id, cq_key_type, cq_pid,ca_id)
+						        }
+						    }
+							if($scope.getSecReplyInit[index]){
+								$.jqPaginator('#pagination2lv_'+ca_id, paginationModel2lv);	
+								$scope.getSecReplyInit[index] = !$scope.getSecReplyInit[index]
+							}
+						}
+						
+						
+						$scope.$apply()
+					}
+				});
+			}
+			//收起回答列表
+			$scope.rollUpRply = function(ca_id){
+				$("ul.reply_2lv_"+ca_id).css("display","none")
+			}
+			//发表回答评论
+			$scope.subComment2lv = function(index,cq_key_id,cq_key_type,cq_pid,ca_id){
+				var content = $("textarea.reply_2lv_textarea_"+ca_id).val()
+				console.log(content)
+				$.ajax({
+					type:"post",
+					url:"http://yun.txhlwxx.com/comment/question/add",
+					async:true,
+					dataType:"json",
+					data:{
+						token:$scope.token,
+						comment_question:{
+							cq_key_id:cq_key_id,
+							cq_key_type:cq_key_type,
+							cq_content:content,
+							cq_pid:ca_id
+						}
+					},
+					success:function(res){
+						console.log(res)
+						$scope.getSecReply(index, 1, 10, cq_key_id, cq_key_type, cq_pid,ca_id)
+						$("textarea.reply_2lv_textarea_"+ca_id).val("")
+											
+						if(res.code==1){
+							alert("回答成功！")
+						}else{
+							alert("回答失败！")
+						}
+						$scope.$apply()
+					}
+				});
+			}
+			
+			//点赞
+			$scope.clickGood = function(ca_id,is_set_good,obj){
+				if(is_set_good!=0){
+					alert("您已赞过！")
+					return
+				}
+				$.ajax({
+					type:"post",
+					url:"http://yun.txhlwxx.com/comment/question/setgood",
+					async:true,
+					dataType:"json",
+					data:{
+						token:$scope.token,
+						ca_id:ca_id
+					},
+					success:function(res){
+						console.log(res)
+						if(res.code==1){
+							obj.good_num++
+							obj.is_set_good=1
+							$scope.$apply()
+							alert("点赞成功！")
+						}else{
+							alert("点赞失败！")
+						}
+							
+					}
+				});
+			}
+		})
+	</script>
+</html>

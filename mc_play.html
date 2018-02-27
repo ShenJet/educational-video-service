@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html ng-app="header" ng-controller="headerCtrl">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-control" content="no-cache">
+		<meta http-equiv="Cache" content="no-cache">
+		<title>微课视频播放页</title>
+		<link rel="stylesheet" type="text/css" href="css/header.css"/>
+		<link rel="stylesheet" type="text/css" href="css/footer.css"/>
+		<link rel="stylesheet" type="text/css" href="css/play.css"/>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/initialize.css"/>
+		<link rel="Shortcut Icon" href="favicon.ico" >
+		<script type="text/javascript" src="js/domain.js"></script>
+		<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/angular.min.js"></script>
+		<script type="text/javascript" src="js/ckplayer/ckplayer.js"></script>
+		<script type="text/javascript" src="js/public.js"></script>
+	</head>
+	<style type="text/css">
+	div.btn3{
+		background: #3F4DED;
+		color: #FFF;
+	}
+	div.btn3:hover{
+		color: #FFF;
+	}
+	span.btn1icon{
+		background: url(img/header/btn1.png) no-repeat;
+	}
+	span.btn2icon{
+		background: url(img/header/btn2.png) no-repeat;
+	}
+	span.btn3icon{
+		background: url(img/header/btn3_w.png) no-repeat;
+	}
+	span.btn4icon{
+		background: url(img/header/btn4.png) no-repeat;
+	}
+	</style>
+	<body>
+		<!--header-->
+		<ng-include src="'template/header.html'"></ng-include>
+		<!--section-->
+		<section>
+			<p id="title" style="font-size: 22px;" ng-cloak>{{title}}</p>
+			<div id="playArea" style="width: 1000px;height: 562.5px;">
+			</div>
+			<div id="intro">
+				<p ng-cloak>{{intro}}</p>
+			</div>
+			<div id="work">
+				<!--<span ng-show='workshow' ng-click="towork()" style="color: blue;text-decoration: underline;cursor: pointer;">点击显示本课程作业</span>-->
+				<iframe  ng-show='workshow' src="" width="1000" height="1400" id="workframe"></iframe>
+				<h1 ng-show='!workshow'>当前课程无作业练习</h1>
+			</div>
+		</section>
+		<!--footer-->
+		<ng-include src="'template/footer.html'"></ng-include>
+	</body>
+	<script type="text/javascript">
+		var headerApp = angular.module("header",[])
+		headerApp.controller("headerCtrl",function($scope,$http){
+			//预处理连接
+			var video_id = window.location.href.split('=')[1]
+			//获取视频并播放
+			$.ajax({
+				type:"get",
+				url:domain+"/micro/course/detail",
+				dataType:'json',
+				data:{
+					id:video_id
+				},
+				success:function(res){
+					console.log(res)
+					$scope.video_src = res.data.mc_video
+					$scope.intro = res.data.mc_abstract
+					$scope.title = res.data.mc_title
+					
+					$scope.$apply()
+					if(res.data.exam_id=="0"){
+						$scope.workshow = false
+					}else{
+						$scope.workshow = true
+						$scope.examurl = domain+"/live_exam/addon.php?mod=practice&action=answer&do=execute&pm_id="+res.data.exam_id+"&stu_uid="+$scope.userinfo.user_id;
+						$('#workframe').attr('src',$scope.examurl)
+					}
+					$scope.$apply()
+					console.log(res.data)
+					if($scope.video_src){
+						//创建播放器视频播放器配置
+						var flashvars={
+					        f:$scope.video_src,
+					        c:0
+					    };
+					    var params={bgcolor:'#FFF',allowFullScreen:true,allowScriptAccess:'always',wmode:'transparent'};
+					    var videourl = $scope.video_src+"->video/mp4"
+					    var video=new Array();
+					    video.push(videourl)
+					    CKobject.embed('js/ckplayer/ckplayer.swf','playArea','ckplayer_a1','100%','100%',true,flashvars,video,params);
+					}else{
+						$('#playArea').html('<h1>未找到该视频资源！</h1>')
+					}
+				}
+			})
+			$scope.towork = function(){
+				if(!$scope.userinfo.user_id){
+					alert("查看作业请先登录~")
+					window.location = "login.html"
+				}else{
+//					window.location = $scope.examurl
+					$('#workframe').attr('src',$scope.examurl)
+					$('#workframe').css('display','block')
+				}
+			}
+			
+			//header区域通用js代码
+			//get session storage
+			if(sessionStorage.getItem('username',$scope.username)){
+				$scope.userinfo = {
+					username:sessionStorage.getItem('username'),
+					token:sessionStorage.getItem('token'),
+					user_id:sessionStorage.getItem('user_id'),
+					user_phone:sessionStorage.getItem('user_phone'),
+					user_role_id:sessionStorage.getItem('user_role_id'),
+					ischeck:sessionStorage.getItem('ischeck'),
+					create_dateline:sessionStorage.getItem('create_dateline'),
+					modify_dateline:sessionStorage.getItem('modify_dateline'),
+					avatar:sessionStorage.getItem('user_avatar'),
+				realname:sessionStorage.getItem('realname')
+				}
+			}else{
+				// alert('请先登录~')
+				window.location='login.html'
+				$scope.userinfo = {
+					username:'用户未登录',
+					avatar:'img/login/default_avatar.png'
+				}
+			}	
+			//搜索功能 搜索目标是课程title
+			$scope.search = function(){
+				if($("input.search-input").val()){
+					window.location = "searchres.html?content=" + $("input.search-input").val()
+				}else{
+					alert("请输入搜索内容")
+				}
+			}
+			//点击播放搜索结果
+			$scope.toPlaySearch = function(id){
+				$("#search_res").css("display","none")
+				window.location="live_play.html?video_id="+id
+			}
+			
+			//个人空间
+			$scope.toMyspace = function(){
+				if($scope.userinfo.username && $scope.userinfo.username!= "" && $scope.userinfo.username != "用户未登录"){
+					$.ajax({
+						type:"post",
+						url:domain+"/live_sns/mysns.php",
+						async:true,
+						data:{
+							user_id:$scope.userinfo.user_id,
+							token:$scope.userinfo.token,
+							client:2
+						},
+						dataType:'json',
+						success:function(res){
+						}
+					});
+					window.location=domain+"/live_sns/mysns.php?user_id="+$scope.userinfo.user_id+"&client=2";
+				}else{
+					alert("用户尚未登录，请先登录。")
+					window.location="login.html"
+				}
+			}
+			//！header区域代码结束
+			
+			
+			
+			//连接跳转
+			$scope.toHome = function(){
+				window.location = "index.html"
+			}
+			$scope.toLive = function(){
+				window.location = "live.html"
+			}
+			$scope.toDemand = function(){
+				window.location = "demand.html"
+			}
+			$scope.toHomeEdu = function(){
+				window.location = "home-edu.html"
+			}
+		})
+	</script>
+	<script src="https://s22.cnzz.com/z_stat.php?id=1264448747&web_id=1264448747" language="JavaScript"></script>
+</html>

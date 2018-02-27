@@ -1,0 +1,115 @@
+/**index.css*/
+/**@copyright = boz*/
+/**2017-02-21 shenjie*/
+body{
+	background-image: url(../img/bgmain.png);
+	background-position: 0 60px;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+}
+section{
+	width: 1000px;
+	height: auto;
+	margin: 0px auto;
+	/*background: pink;*/
+	overflow: hidden;
+}
+
+div.btn4{
+	background: #3F4DED;
+	color: #FFF;
+}
+div.btn4:hover{
+	color: #FFF;
+}
+ul#nav{
+	width: 1000px;
+	height: 120px;
+	padding-left: 60px;
+	padding-right: 60px;
+	background: #FFF;
+	padding: 10px;
+}
+ul#nav>li{
+	height: 100px;
+	width: 176px;
+	float: left;
+	text-align: center;
+	padding-top: 10px;
+	font-size: 18px;
+	cursor: pointer;
+}
+/*swiper css*/
+.swiper-container {
+    width: 1000px;
+    height: 562.5px;
+    margin-top: 30px;
+}
+.swiper-slide {
+    background-position: center;
+    background-size: cover;
+}
+.lunboimg{
+	width: 1000px;
+	height: 562.5px;
+}
+/*small cube show*/
+ul#liveShow{
+	width: 1000px;
+	height: auto;
+	min-height: 400px;
+	overflow: hidden;
+	margin-top: 20px;
+}
+html,body{
+	height: 100%;
+}
+ul#liveShow>li{
+	width: 241px;
+	height: 214px;
+	background: #FFF;
+	float: left;
+	margin-bottom: 10px;
+	overflow: hidden;
+	padding: 8px;
+	cursor: pointer;
+}
+
+ul#liveShow>li:nth-child(4n-2),ul#liveShow>li:nth-child(4n-1),ul#liveShow>li:nth-child(4n){
+	margin-left: 12px;
+}
+ul#liveShow>li>div.up{
+	width:225px;
+	height: 127px;
+}
+ul#liveShow>li>div.up>img{
+	width:225px;
+	height: 127px;
+}
+
+ul#liveShow>li>div.mid{
+	width:225px;
+	height: 40px;
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+ul#liveShow>li>div.mid{
+	width:225px;
+	
+	line-height: 15px;
+	font-size: 13px;
+	margin-top: 5px;
+}
+
+ul#liveShow>li>div.btm{
+	width:300px;
+	height: 30px;
+}
+ul#liveShow>li>div.btm div{
+	color: #c9c9c9;
+}
+
+ul#liveShow>li>div.btm>div{
+	float: left;
+}

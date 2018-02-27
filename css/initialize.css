@@ -1,0 +1,62 @@
+/*初始化文件*/
+
+*{
+	margin: 0;
+	padding: 0;
+	font-family: Arial,Verdana,"Microsoft Yahei";
+	color: #4A4A4A;
+}
+html,body{
+	background: #F3F4FF;
+}
+ul,li {
+	list-style: none;
+	}
+img{
+	border: 0;
+}
+button,input,select{
+	outline: none;
+}
+a{
+	text-decoration: none;
+	color: inherit;
+}
+iframe{
+	border: none;
+}
+.pagination>li>a,.pagination>li .prev>a,.pagination>li .next>a{
+	/*border-top-left-radius:17px;!important
+	border-bottom-left-radius:17px;*/
+	border-radius: 50%;!important
+	margin-left: 5px;
+	margin-right: 5px;
+}
+.pagination>li.active>a{
+	background: #3F4DED;
+}
+.pagination>li>a:hover{
+	background: #5764F0;
+	color: #CCC;
+}
+.prev{
+	
+}
+.pagination.pagination2lv>li>a{
+	padding: 0;
+	width: 20px;height: 20px;
+	border-radius: 0;
+	line-height: 20px;
+	font-size: 12px;
+	margin-left: 3px;
+	margin-right: 3px;
+	text-align: center;
+}
+.pagination2lv>li.active>a{
+	background: #3F4DED;
+}
+.pagination2lv>li>a:hover{
+	background: #5764F0;
+	color: #CCC;
+}
+

@@ -1,0 +1,44 @@
+/*index.css         */
+/*@copyright = boz  */
+/*2017-02-14 shenjie*/
+
+footer{
+	min-width: 1000px;
+	height: 90px;
+	margin: 20px auto 0;
+	font-size: 12px;
+}
+
+ul.about{
+	width: 1000px;
+	height: 20px;
+	text-align: center;
+	padding-top: 10px;
+	margin: 0 auto;
+	border-top: 1px solid #DCDCDC;
+}
+
+ul.about>li{
+	float: left;
+}
+ul.about>li>a{
+	font-size: 13px;
+	color: #8A8A8A;
+}
+div.alert{
+	width: 100vw;
+	height: 100vh;
+	display: none;
+	position: fixed;
+	padding-top: 50px;
+	top: 0;left: 0;
+	background: rgba(0,0,0,.4);
+}
+.content{
+	width: 80$;
+	height: auto;
+	background: #FFF;
+	color: #000000;
+	margin: 0 auto;
+	padding: 30px;
+}

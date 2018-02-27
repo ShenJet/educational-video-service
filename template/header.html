@@ -1,0 +1,50 @@
+<!--header-->
+<header>
+    <div id="headContainer">
+        <div id="logo">
+            <img src="img/login/logo.png" style="width: 40px;height: auto;" />
+            <span id="" style="color:#E68523;">
+                桐乡网校
+            </span>
+        </div>
+        <div id="head-btns" class="btn-group" role="group" aria-label="">
+            <div class="btn btn1" ng-click="toHome()">
+                <span class="btn1icon btnicon" ></span>首页
+            </div>
+            <div class="btn btn2" ng-click="toLive()">
+                <span class="btn2icon btnicon" ></span>直播
+            </div>
+            <div class="btn btn3" ng-click="toDemand()">
+                <span class="btn3icon btnicon" ></span>点播
+            </div>
+            <div class="btn btn4" style="width: 110px;" ng-click="toHomeEdu()">
+                <span class="btn4icon btnicon" ></span>家庭教育
+            </div>
+        </div>
+        <ul class="myarea">
+            <!--<li class="msgs"><span class="tipsMsg">99+</span></li>-->
+            <li class="avatar">
+                <img ng-src="{{userinfo.avatar}}" style="width: 30px;height: auto;"/>
+            </li>
+            <li class="userMenu" id="userMenu" style="height: 100%;padding-top: 20px;margin-left: 180px;">
+                <!-- Single button -->
+                <div class="btn-group userMenu">
+                    <p class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-cloak>
+                        管理菜单
+                        <span class="caret"></span>
+                    </p>
+                    <ul class="dropdown-menu">
+                        <li><a href="javascript:void(0)" onclick="toInfo()">个人资料</a></li>
+                        <li><a href="admin/index.php?mod=index&action=index&do=index">课程管理</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+        <div id="search-wrap" class="search-warp" style="position: relative;">
+            <div class="search-area" data-search="top-banner">
+                <input class="search-input" ng-model="search_content" placeholder=" 搜索" type="text">
+                <button class="icon-search" ng-click="search()"></button>
+            </div>
+        </div>		
+    </div>
+</header>

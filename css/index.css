@@ -1,0 +1,146 @@
+/*index.css         */
+/*@copyright = boz  */
+/*2017-02-14 shenjie*/
+body{
+	background-image: url(../img/bgmain.png);
+	background-position: 0 60px;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+}
+
+section{
+	width: 1000px;
+	height: auto;
+	margin: 0px auto;
+	overflow: hidden;
+}
+
+div.btn1{
+	background: #3F4DED;
+	color: #FFF;
+}
+div.btn1:hover{
+	color: #FFF;
+}
+div#swiper{
+	width: 1000px;
+	height: 332px;
+	overflow: hidden;
+	padding: 10px;
+	background: #FFF;
+}
+
+.swiper-container {
+    width: 512px;
+    height: 312px;
+    float: left;
+}
+ul.swiper-min{
+	width: 468px;
+	height: 332px;
+	float: left;
+}
+ul.swiper-min>li{
+	width: 225px;
+	height: 126.6px;
+	float: left;
+	margin-left: 5px;
+	margin-bottom: 20px;
+}
+ul.swiper-min>li>img{
+	width: 250px;
+	height: 108px;
+}
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+div#moreLive{
+	width: 1000px;
+	height: 60px;
+	padding-left: 420px;
+	padding-top: 20px;
+	margin-top: 40px;
+	/*background: pink;*/
+	
+}
+div#moreLive>span{
+	margin-right: 40px;
+}
+
+ul.liveShow{
+	width: 1000px;
+	height: auto;
+	overflow: hidden;
+	margin-top: 20px;
+}
+
+ul.liveShow>li{
+	width: 241px;
+	height: 236px;
+	background: #FFF;
+	float: left;
+	margin-bottom: 10px;
+	overflow: hidden;
+	padding: 8px;
+}
+
+ul.liveShow>li:nth-child(4n-2),ul.liveShow>li:nth-child(4n-1),ul.liveShow>li:nth-child(4n){
+	margin-left: 10px;
+}
+
+ul.liveShow>li>div.up{
+	width:225px;
+	height: 126.6px;
+}
+
+ul.liveShow>li>div.up>img{
+	width:225px;
+	height: 126.6px;
+}
+
+ul.liveShow>li>div.mid{
+	width:225px;
+	height: 40px;
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+ul.liveShow>li>div.btm{
+	width:225px;
+	height: 20px;
+	line-height: 20px;
+	overflow: hidden;
+}
+ul.liveShow>li>div.btm>div{
+	color: #C9C9C9;
+}
+div.btm1{
+	float: left;
+}
+div.btm2{
+	float: right;
+}
+div.btm3{
+	color: #C9C9C9;
+}
+.list_icon{
+	width: 18px;
+	height: auto;
+}

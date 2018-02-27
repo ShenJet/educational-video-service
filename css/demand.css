@@ -1,0 +1,140 @@
+/**index.css*/
+/**@copyright = boz*/
+/**2017-02-21 shenjie*/
+body{
+	background-image: url(../img/bgmain.png);
+	background-position: 0 60px;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+}
+section{
+	width: 1000px;
+	height: auto;
+	margin: 0px auto;
+	/*background: pink;*/
+	overflow: hidden;
+}
+
+div.btn3{
+	background: #3F4DED;
+	color: #FFF;
+}
+div.btn3:hover{
+	color: #FFF;
+}
+div#subjectChoice,div#kindChoice{
+	width: 1000px;
+	overflow: hidden;
+	background: #FFF;
+	padding: 10px;
+}
+div#subjectChoice{
+	height: auto;
+	display: none;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+div#kindChoice{
+	padding-bottom: 0;
+	height: 40px;
+}
+div#subjectChoice>p,div#kindChoice>p{
+	float: left;
+	height: inherit;
+	width: 100px;
+	text-align: left;
+	/*background: green;*/
+	font-size: 18px;
+	padding-top: 3px;
+	padding-left: 11px;
+}
+div#subjectChoice>div,div#kindChoice>div{
+	float: left;
+	height: inherit;
+	width: 980px;
+	height: auto;
+}
+div#subjects>a,div#kinds>a{
+	display: block;
+	float: left;
+	/*min-width: 100px;*/
+	height: 30px;
+	/*background: #4154E8;*/
+	border-radius: 15px;
+	color: #000;
+	text-align: center;
+	line-height: 30px;
+	font-size: 16px;
+	margin-bottom: 0px;
+	text-decoration: none;
+	padding-left: 12px;
+	padding-right: 12px;
+}
+#fold{
+	width: 300px;
+	height: 28px;
+	margin-left: 200px;
+	display: inline-block;
+	text-align: center;
+	font-size: 18px;
+}
+
+
+/*small cube show*/
+ul#liveShow{
+	width: 1000px;
+	height: auto;
+	overflow: hidden;
+	margin-top: 20px;
+}
+
+ul#liveShow>li{
+	width: 241px;
+	height: 236px;
+	background: #FFF;
+	float: left;
+	margin-bottom: 10px;
+	overflow: hidden;
+	padding: 8px;
+	cursor: pointer;
+}
+
+ul#liveShow>li:nth-child(4n-2),ul#liveShow>li:nth-child(4n-1),ul#liveShow>li:nth-child(4n){
+	margin-left: 12px;
+}
+ul#liveShow>li>div.up{
+	width:225px;
+	height: 126.6px;
+}
+
+ul#liveShow>li>div.up>img{
+	width:225px;
+	height: 126.6px;
+}
+
+ul#liveShow>li>div.mid{
+	width:225px;
+	height: 40px;
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+ul#liveShow>li>div.btm{
+	/*width:225px;*/
+	overflow: hidden;
+	height: 20px;
+	line-height: 20px;
+}
+ul#liveShow>li>div.btm a,ul#liveShow>li>div.btm span{
+	color: #C9C9C9;
+}
+div.btm1{
+	float: left;
+}
+div.btm2{
+	float: right;
+}
+div.btm3{
+	float: left;
+	color: #C9C9C9;
+}

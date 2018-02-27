@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html ng-app="header" ng-controller="headerCtrl">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta charset="UTF-8">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-control" content="no-cache">
+		<meta http-equiv="Cache" content="no-cache">
+		<title>个人资料</title>
+		<link rel="stylesheet" type="text/css" href="css/header.css" />
+		<link rel="stylesheet" type="text/css" href="css/footer.css" />
+		<link rel="stylesheet" type="text/css" href="css/info.css" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/initialize.css" />
+		<link rel="Shortcut Icon" href="favicon.ico">
+		<script type="text/javascript" src="js/domain.js"></script>
+		<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/angular.min.js"></script>
+		<script type="text/javascript" src="js/ckplayer/ckplayer.js"></script>
+		<script type="text/javascript" src="js/public.js"></script>
+	</head>
+	<style type="text/css">
+		span.btn1icon {
+			background: url(img/header/btn1.png) no-repeat;
+		}
+		
+		span.btn2icon {
+			background: url(img/header/btn2.png) no-repeat;
+		}
+		
+		span.btn3icon {
+			background: url(img/header/btn3.png) no-repeat;
+		}
+		
+		span.btn4icon {
+			background: url(img/header/btn4.png) no-repeat;
+		}
+		.divtranscolor{
+            background-color: red;
+			width: 80%;
+			height: 10px;
+			margin-top:7px;
+			margin-left: 10%;
+			text-align: auto;;
+			border: 1px;
+		}
+	</style>
+    <link rel="stylesheet" href="css/secondEdit.css">
+	<body onLoad="init()">
+		<!--header-->
+		<ng-include src="'template/header.html'"></ng-include>
+		<!--section-->
+		<section>
+			<div class="infoBg">
+				<div class="bigAvatar">
+					<img ng-src="{{userinfo.avatar}}" ng-cloak />
+				</div>
+				<p style="width: 100%;text-align: center;font-size: 18px;margin-top: 14px;color: #FFF;" ng-cloak>{{userinfo.username}}</p>
+			</div>
+			<div class="main">
+				<ul class="sidebar" id="persondataSider">
+					<li ng-click="toMyspace()" style="display:none;">个人空间</li>
+					<li style="background: #E1E1E1;" onclick="toInfo()">个人资料</li>
+					<li ng-click="exit()" style="display:none;">退出</li>
+				</ul>
+				<div class="infoMain" id="personDatainfoMain">
+					<p style="margin-bottom: 40px;padding-left: 20px;line-height: 40px;height: 40px;border-bottom: 1px solid #CCC;color: #4154E8;">个人资料</p>
+					<form name="creator" class="form-horizontal">
+						<div class="rowmain">
+							<p class="row_l">头像:</p>
+							<div class="row_r">
+								<div class="upload">
+									<input type="file" name="file" id="file" value="" accept="image/png,image/jpeg,image/jpg,image/gif" />
+									<p>点击上传头像</p>
+								</div>
+								<p>请上传jpg或png格式<br />200px*200px</p>
+							</div>
+						</div>
+						<div class="rowmain" style="margin-top:20px;">
+							<p class="row_l">学校:</p>
+							<div class="row_r" ng-cloak id="userSchoolTag">{{userinfo.school}}</div>
+						</div>
+						<div class="rowmain">
+							<p class="row_l">年级/班级:</p>
+							<div class="row_r" ng-cloak id="userClassTag">{{userinfo.class}}</div>
+						</div>
+						<div class="rowmain">
+							<p class="row_l">姓名:</p>
+							<div class="row_r" ng-cloak id="userNameTag">{{userinfo.realname}}</div>
+						</div>
+						<div class="rowmain">
+							<p class="row_l">性别:</p>
+							<div class="row_r">
+								<input type="radio" name="sex" class="sex nan" value="男" checked="checked" /> 男
+								<input type="radio" name="sex" class="sex nv" value="女" style="margin-left: 40px;" /> 女
+								<input type="radio" name="sex" class="sex sec" value="保密" style="margin-left: 40px;" /> 保密
+							</div>
+						</div>
+						<div class="rowmain">
+							<p class="row_l">出生日期</p>
+							<div class="row_r">
+								<select name="year" class="year" style="width: 60px;" ng-init="birthyear = year[0]" ng-model="birthyear" ng-options="x for x in year">
+								</select> 年
+								<select name="month" class="month" style="margin-left: 30px;width: 60px;" ng-init="birthmonth = month[0]" ng-model="birthmonth" ng-options="x for x in month">
+								</select> 月
+								<select name="day" class="day" style="margin-left: 30px;width: 60px;" ng-init="birthday = day[0]" ng-model="birthday" ng-options="x for x in day">
+								</select> 日
+							</div>
+						</div>
+						<div class="rowmain">
+							<p class="row_l">年级</p>
+							<div class="row_r">
+								<select name="day" class="grade" style="width: 120px;">
+									<option value="">请选择年级</option>
+									<option ng-repeat="x in grade" value="" ng-cloak>{{x}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="rowmain">
+							<p class="row_l">地区</p>
+							<div class="row_r" name="creator">
+								<select name="province" class="province" onchange="select()" style="width: 80px;">
+									<option value="">选择省份</option>
+								</select> 省&nbsp;&nbsp;
+								<select name="city" class="city" onchange="select()" style="width: 80px;">
+									<option value="">选择市</option>
+								</select> 市/区&nbsp;&nbsp;
+								<input type="text" name="" class="town" value="" placeholder="区县" style="width: 120px;" /> 区/县
+							</div>
+						</div>
+						<div class="rowmain">
+							<p class="row_l">&nbsp;</p>
+							<div class="row_r">
+								<input type="submit" value="提交" class="btn btn-primary" ng-click="modInfo()" style="padding-left:20%;padding-right:20%;"/>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
+		</section>
+		<!--footer-->
+		<ng-include src="'template/footer.html'"></ng-include>
+	</body>
+	<script type="text/javascript">
+		var where = new Array(33);
+
+		function comefrom(loca, locacity) {
+			this.loca = loca;
+			this.locacity = locacity;
+		}
+		where[0] = new comefrom("请选择省份", "请选择城市");
+		where[1] = new comefrom("北京", "|东城|西城|崇文|宣武|朝阳|丰台|石景山|海淀|门头沟|房山|通州|顺义|昌平|大兴|平谷|怀柔|密云|延庆"); //欢迎来到站长特效网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，本站收集大量高质量js代码，还有许多广告代码下载。
+		where[2] = new comefrom("上海", "|黄浦|卢湾|徐汇|长宁|静安|普陀|闸北|虹口|杨浦|闵行|宝山|嘉定|浦东|金山|松江|青浦|南汇|奉贤|崇明"); //欢迎来到站长特效网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，本站收集大量高质量js代码，还有许多广告代码下载。
+		where[3] = new comefrom("天津", "|和平|东丽|河东|西青|河西|津南|南开|北辰|河北|武清|红挢|塘沽|汉沽|大港|宁河|静海|宝坻|蓟县");
+		where[4] = new comefrom("重庆", "|万州|涪陵|渝中|大渡口|江北|沙坪坝|九龙坡|南岸|北碚|万盛|双挢|渝北|巴南|黔江|长寿|綦江|潼南|铜梁|大足|荣昌|壁山|梁平|城口|丰都|垫江|武隆|忠县|开县|云阳|奉节|巫山|巫溪|石柱|秀山|酉阳|彭水|江津|合川|永川|南川");
+		where[5] = new comefrom("河北", "|石家庄|邯郸|邢台|保定|张家口|承德|廊坊|唐山|秦皇岛|沧州|衡水");
+		where[6] = new comefrom("山西", "|太原|大同|阳泉|长治|晋城|朔州|吕梁|忻州|晋中|临汾|运城");
+		where[7] = new comefrom("内蒙古", "|呼和浩特|包头|乌海|赤峰|呼伦贝尔盟|阿拉善盟|哲里木盟|兴安盟|乌兰察布盟|锡林郭勒盟|巴彦淖尔盟|伊克昭盟");
+		where[8] = new comefrom("辽宁", "|沈阳|大连|鞍山|抚顺|本溪|丹东|锦州|营口|阜新|辽阳|盘锦|铁岭|朝阳|葫芦岛");
+		where[9] = new comefrom("吉林", "|长春|吉林|四平|辽源|通化|白山|松原|白城|延边");
+		where[10] = new comefrom("黑龙江", "|哈尔滨|齐齐哈尔|牡丹江|佳木斯|大庆|绥化|鹤岗|鸡西|黑河|双鸭山|伊春|七台河|大兴安岭");
+		where[11] = new comefrom("江苏", "|南京|镇江|苏州|南通|扬州|盐城|徐州|连云港|常州|无锡|宿迁|泰州|淮安");
+		where[12] = new comefrom("浙江", "|杭州|宁波|温州|嘉兴|湖州|绍兴|金华|衢州|舟山|台州|丽水");
+		where[13] = new comefrom("安徽", "|合肥|芜湖|蚌埠|马鞍山|淮北|铜陵|安庆|黄山|滁州|宿州|池州|淮南|巢湖|阜阳|六安|宣城|亳州");
+		where[14] = new comefrom("福建", "|福州|厦门|莆田|三明|泉州|漳州|南平|龙岩|宁德");
+		where[15] = new comefrom("江西", "|南昌市|景德镇|九江|鹰潭|萍乡|新馀|赣州|吉安|宜春|抚州|上饶");
+		where[16] = new comefrom("山东", "|济南|青岛|淄博|枣庄|东营|烟台|潍坊|济宁|泰安|威海|日照|莱芜|临沂|德州|聊城|滨州|菏泽");
+		where[17] = new comefrom("河南", "|郑州|开封|洛阳|平顶山|安阳|鹤壁|新乡|焦作|濮阳|许昌|漯河|三门峡|南阳|商丘|信阳|周口|驻马店|济源");
+		where[18] = new comefrom("湖北", "|武汉|宜昌|荆州|襄樊|黄石|荆门|黄冈|十堰|恩施|潜江|天门|仙桃|随州|咸宁|孝感|鄂州");
+		where[19] = new comefrom("湖南", "|长沙|常德|株洲|湘潭|衡阳|岳阳|邵阳|益阳|娄底|怀化|郴州|永州|湘西|张家界");
+		where[20] = new comefrom("广东", "|广州|深圳|珠海|汕头|东莞|中山|佛山|韶关|江门|湛江|茂名|肇庆|惠州|梅州|汕尾|河源|阳江|清远|潮州|揭阳|云浮");
+		where[21] = new comefrom("广西", "|南宁|柳州|桂林|梧州|北海|防城港|钦州|贵港|玉林|南宁地区|柳州地区|贺州|百色|河池");
+		where[22] = new comefrom("海南", "|海口|三亚");
+		where[23] = new comefrom("四川", "|成都|绵阳|德阳|自贡|攀枝花|广元|内江|乐山|南充|宜宾|广安|达川|雅安|眉山|甘孜|凉山|泸州");
+		where[24] = new comefrom("贵州", "|贵阳|六盘水|遵义|安顺|铜仁|黔西南|毕节|黔东南|黔南");
+		where[25] = new comefrom("云南", "|昆明|大理|曲靖|玉溪|昭通|楚雄|红河|文山|思茅|西双版纳|保山|德宏|丽江|怒江|迪庆|临沧");
+		where[26] = new comefrom("西藏", "|拉萨|日喀则|山南|林芝|昌都|阿里|那曲");
+		where[27] = new comefrom("陕西", "|西安|宝鸡|咸阳|铜川|渭南|延安|榆林|汉中|安康|商洛");
+		where[28] = new comefrom("甘肃", "|兰州|嘉峪关|金昌|白银|天水|酒泉|张掖|武威|定西|陇南|平凉|庆阳|临夏|甘南");
+		where[29] = new comefrom("宁夏", "|银川|石嘴山|吴忠|固原");
+		where[30] = new comefrom("青海", "|西宁|海东|海南|海北|黄南|玉树|果洛|海西");
+		where[31] = new comefrom("新疆", "|乌鲁木齐|石河子|克拉玛依|伊犁|巴音郭勒|昌吉|克孜勒苏柯尔克孜|博尔塔拉|吐鲁番|哈密|喀什|和田|阿克苏");
+		where[32] = new comefrom("台湾", "|台北|高雄|台中|台南|屏东|南投|云林|新竹|彰化|苗栗|嘉义|花莲|桃园|宜兰|基隆|台东|金门|马祖|澎湖");
+
+		function select() {
+			with(document.creator.province) {
+				var loca2 = options[selectedIndex].value;
+			}
+			for(i = 0; i < where.length; i++) {
+				if(where[i].loca == loca2) {
+					loca3 = (where[i].locacity).split("|");
+					for(j = 0; j < loca3.length; j++) {
+						with(document.creator.city) {
+							length = loca3.length;
+							options[j].text = loca3[j];
+							options[j].value = loca3[j];
+							var loca4 = options[selectedIndex].value;
+						}
+					}
+					break;
+				}
+			}
+			//console.log(loca2,loca4)
+			//document.creator.newlocation.value = loca2 + loca4;
+		}
+
+		function init() {
+			with(document.creator.province) {
+				length = where.length;
+				for(k = 0; k < where.length; k++) {
+					options[k].text = where[k].loca;
+					options[k].value = where[k].loca;
+				}
+				options[selectedIndex].text = where[0].loca;
+				options[selectedIndex].value = where[0].loca;
+			}
+			with(document.creator.city) {
+				loca3 = (where[0].locacity).split("|");
+				length = loca3.length;
+				for(l = 0; l < length; l++) {
+					options[l].text = loca3[l];
+					options[l].value = loca3[l];
+				}
+				options[selectedIndex].text = loca3[0];
+				options[selectedIndex].value = loca3[0];
+			}
+		}
+	</script>
+	<script type="text/javascript">
+		var headerApp = angular.module("header", [])
+		headerApp.controller("headerCtrl", function($scope, $http) {
+			$scope.month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+			$scope.day = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+			$scope.grade = ["一年级", "二年级", "三年级", "四年级", "五年级", "六年级", "七年级", "八年级", "九年级"];
+			$scope.year = [];
+			$scope.minyear = 1980;
+			$scope.maxyear = (new Date).getFullYear();
+			console.log($scope.maxyear)
+			while($scope.minyear <= $scope.maxyear) {
+				$scope.year.push($scope.minyear);
+				$scope.minyear++;
+			}
+
+			$('#file').change(function(e) {
+				//console.log(this.files[0])
+				if(this.files[0]) {
+					$scope.fileObj = this.files[0];
+					var dataURL = window.URL.createObjectURL(this.files[0]);
+					$(".upload").css("background", "url(" + dataURL + ")")
+					$(".upload").css("background-repeat", "no-repeat")
+					$(".upload").css("background-size", "160px 160px")
+				}
+			})
+			function setUndefinedEqalNull(str){
+                if(str=="undefined" || str==null){
+                     return "";
+				}else{
+					return str;
+				}
+			}
+
+			$scope.modInfo = function() {
+
+				var form = new FormData();
+				form.append("token", $scope.userinfo.token)
+				form.append("filedata", $scope.fileObj)
+				if($scope.fileObj) {
+					console.log(1)
+					$.ajax({
+						type: "post",
+						url: domain + "/upload/main/file",
+						async: true,
+						data: form,
+						dataType: "json",
+						contentType: false,
+						processData: false,
+						success: function(res) {
+							console.log(res.data.url);
+							$scope.userinfo.avatar = domain + "/" + res.data.url;
+							sessionStorage.setItem('user_avatar', domain + "/" + res.data.url);
+							//$scope.$apply();
+							//$scope.subInfo();
+						}
+					})
+					return
+				}
+				$scope.subInfo();
+			}
+
+			$scope.subInfo = function() {
+				$.ajax({
+					type: "post",
+					url: domain + "/user/main/edit",
+					async: true,
+					data: {
+						token: $scope.userinfo.token,
+						user_main: {
+							user_avatar: $scope.userinfo.avatar,
+							user_realname: $scope.userinfo.realname,
+							gender: $("input.sex:checked").index() + 1,
+							user_grade: $("select.grade option:selected").text(),
+							user_birthday: $scope.birthyear + "-" + $scope.birthmonth + "-" + $scope.birthday,
+							area_id1: $("select.province option:selected").text(),
+							area_id2: $("select.city option:selected").text(),
+							area_id3: $("input.town").val()
+						}
+					},
+					dataType: "json",
+					success: function(res) {
+						console.log(res)
+						if(res.code == 1) {
+							alert("信息修改成功！");
+							location.reload();
+						}
+					}
+				});
+			}
+
+			//header区域通用js代码
+			//get session storage
+			if(sessionStorage.getItem('username', $scope.username)) {
+				$scope.userinfo = {
+					username: sessionStorage.getItem('username'),
+					token: sessionStorage.getItem('token'),
+					user_id: sessionStorage.getItem('user_id'),
+					user_phone: sessionStorage.getItem('user_phone'),
+					user_role_id: sessionStorage.getItem('user_role_id'),
+					ischeck: sessionStorage.getItem('ischeck'),
+					create_dateline: sessionStorage.getItem('create_dateline'),
+					modify_dateline: sessionStorage.getItem('modify_dateline'),
+					avatar: sessionStorage.getItem('user_avatar'),
+					school: sessionStorage.getItem('sm_name'),
+					class: sessionStorage.getItem('cm_name'),
+					realname: sessionStorage.getItem('realname')
+				}
+				$scope.userinfo.school=setUndefinedEqalNull($scope.userinfo.school);
+				$scope.userinfo.class=setUndefinedEqalNull($scope.userinfo.class);
+				$scope.userinfo.realname=setUndefinedEqalNull($scope.userinfo.realname);
+			} else {
+				// alert('请先登录~')
+				window.location = 'login.html'
+				$scope.userinfo = {
+					username: '用户未登录',
+					avatar: 'img/login/default_avatar.png'
+				}
+			}
+            
+			//退出
+			$scope.exit = function() {
+				sessionStorage.clear()
+				$scope.userinfo = {
+					username: '用户未登录',
+					avatar: 'img/login/default_avatar.png'
+				}
+				window.location = "login.html"
+			}
+			//搜索功能 搜索目标是课程title
+			$scope.search = function() {
+				if($("input.search-input").val()) {
+					window.location = "searchres.html?content=" + $("input.search-input").val()
+				} else {
+					alert("请输入搜索内容")
+				}
+			}
+			//点击播放搜索结果
+			$scope.toPlaySearch = function(id) {
+				$("#search_res").css("display", "none")
+				window.location = "live_play.html?video_id=" + id
+			}
+            
+			//个人空间
+			$scope.toMyspace = function() {
+				if($scope.userinfo.username && $scope.userinfo.username != "" && $scope.userinfo.username != "用户未登录") {
+					$.ajax({
+						type: "post",
+						url: domain + "/live_sns/mysns.php",
+						async: true,
+						data: {
+							user_id: $scope.userinfo.user_id,
+							token: $scope.userinfo.token,
+							client: 2
+						},
+						dataType: 'json',
+						success: function(res) {
+							
+						}
+					});
+					window.location = domain + "/live_sns/mysns.php?user_id=" + $scope.userinfo.user_id + "&client=2";
+				} else {
+					alert("用户尚未登录，请先登录。")
+					window.location = "login.html"
+				}
+			}
+			//！header区域代码结束
+
+			//连接跳转
+			$scope.toHome = function() {
+				window.location = "index.html"
+			}
+			$scope.toLive = function() {
+				window.location = "live.html"
+			}
+			$scope.toDemand = function() {
+				window.location = "demand.html"
+			}
+			$scope.toHomeEdu = function() {
+				window.location = "home-edu.html"
+			}
+		})
+	</script>
+	<script src="https://s22.cnzz.com/z_stat.php?id=1264448747&web_id=1264448747" language="JavaScript"></script>
+
+</html>

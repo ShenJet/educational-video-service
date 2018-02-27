@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html ng-app="homeEduApp" ng-controller="homeEduCtrl">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-control" content="no-cache">
+		<meta http-equiv="Cache" content="no-cache">
+		<title>家庭教育</title>
+		<link rel="stylesheet" type="text/css" href="css/initialize.css"/>
+		<link rel="stylesheet" type="text/css" href="css/header.css"/>
+		<link rel="stylesheet" type="text/css" href="css/footer.css"/>
+		<link rel="stylesheet" type="text/css" href="css/home-edu.css"/>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/swiper.min.css"/>
+		<link rel="Shortcut Icon" href="favicon.ico" >
+		<script type="text/javascript" src="js/domain.js"></script>
+		<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/angular.min.js"></script>
+		<script type="text/javascript" src="js/swiper.min.js"></script>
+		<script type="text/javascript" src="js/public.js"></script>
+		<script type="text/javascript" src="js/jqPaginator.js"></script>
+	</head>
+	<style type="text/css">
+		span.btn1icon{
+			background: url(img/header/btn1.png) no-repeat;
+		}
+		span.btn2icon{
+			background: url(img/header/btn2.png) no-repeat;
+		}
+		span.btn3icon{
+			background: url(img/header/btn3.png) no-repeat;
+		}
+		span.btn4icon{
+			background: url(img/header/btn4_w.png) no-repeat;
+		}
+		.titleflow{
+			overflow: hidden;
+		}
+	</style>
+	<body>
+		<!--header-->
+		<ng-include src="'template/header.html'"></ng-include>
+		<!--section-->
+		<section>
+			<ul id="nav">
+				<li style="background: url(img/homeedu/btnbg.png) no-repeat;background-position: 52px 0;"><img src="img/homeedu/all.png" class="" alt="" /><p style="color: white;">全部</p></li>
+				<li><img src="img/homeedu/jxqz.png" alt="菊香亲子" /><p>菊香亲子</p></li>
+				<li><img src="img/homeedu/yqzd.png" alt="一起长大" /><p>一起长大</p></li>
+				<li><img src="img/homeedu/yeyf.png" alt="家长学校" /><p>家长学校</p></li>
+				<li><img src="img/homeedu/building.png" alt="敬请期待" style="height: 58px;width: auto;"/><p>敬请期待</p></li>
+			</ul>
+			
+			<!-- Swiper -->
+    			<div class="swiper-container" ng-show="he_cate_id == 0" style="display:none;">
+        			<div class="swiper-wrapper">
+		            <div ng-repeat="x in rotations"  class="swiper-slide">
+		            		<img ng-src="{{x.ai_path}}" class="lunboimg" ng-click="toHomeeduPlay(x.ai_id,x.ad_link)"/>
+		            </div>
+        			</div>
+		        <!-- Add Pagination -->
+		        <div class="swiper-pagination swiper-pagination-white"></div>
+		        <!-- Add Arrows -->
+		        <div class="swiper-button-next swiper-button-white"></div>
+		        <div class="swiper-button-prev swiper-button-white"></div>
+    			</div>
+			
+			<ul id="liveShow">
+				<li ng-repeat="x in homeedulist" ng-click='toHomeeduPlay(x.he_id)'>
+					<div class="up">
+						<img ng-src="{{x.he_img}}"/>
+					</div>
+					<div class="mid titleflow">{{x.he_title}}</div>
+					<div class="btm">
+						<div>
+							<img src="img/live/eye_icon.png" class="list_icon"/>
+							{{x.he_demand_num}}
+						</div>
+						<div style="margin-left: 30px;">
+							<img src="img/live/date_icon.png" class="list_icon"/>
+							{{ x.create_dateline * 1000 | date:'MM/dd HH:mm' }}
+						</div>
+					</div>
+				</li>
+			</ul>
+			<ul class="pagination" id="pagination" style="margin-left:50%;transform: translate(-50%);"></ul>
+		</section>
+		<!--footer-->
+		<ng-include src="'template/footer.html'"></ng-include>
+	</body>
+	<script type="text/javascript">
+		var headerApp = angular.module("homeEduApp",[])
+		headerApp.controller("homeEduCtrl",function($scope,$http){
+			$scope.he_cate_id = 0;
+			
+			$("ul#nav li").click(function(){
+				if($(this).index()==4){
+					alert("建设中，敬请期待~")
+					return
+				}
+				$("ul#nav li").css("background-image","none")
+				$("ul#nav li p").css("color","black")
+				$(this).css("background-image","url(img/homeedu/btnbg.png)")
+				$(this).css("background-repeat","no-repeat")
+				$(this).css("background-position","52px 0")
+				$(this).children().css("color","white")
+				
+				switch($(this).index()){
+					case 0:
+					$scope.he_cate_id = 0;
+					break
+					case 1:
+					$scope.he_cate_id = 1;
+					break
+					case 2:
+					$scope.he_cate_id = 2 ;
+					break
+					case 3:
+					$scope.he_cate_id = 3 ;
+					break
+					case 4:
+					$scope.he_cate_id = 4 ;
+					break
+				}
+				//家庭教育列表筛选
+				$.ajax({
+					type:"post",
+					url:domain+"/home/edu/index",
+					async:true,
+					dataType:'json',
+					data:{
+						token:$scope.userinfo.token,
+						he_cate_id:$scope.he_cate_id
+					},
+					success:function(res){
+						$scope.homeedulist = res.data.page_data
+						$scope.$apply()
+						console.log($scope.homeedulist)
+					}
+				});
+			})
+			
+		//header区域通用js代码
+			//get session storage
+			if(sessionStorage.getItem('username',$scope.username)){
+				$scope.userinfo = {
+					username:sessionStorage.getItem('username'),
+					token:sessionStorage.getItem('token'),
+					user_id:sessionStorage.getItem('user_id'),
+					user_phone:sessionStorage.getItem('user_phone'),
+					user_role_id:sessionStorage.getItem('user_role_id'),
+					ischeck:sessionStorage.getItem('ischeck'),
+					create_dateline:sessionStorage.getItem('create_dateline'),
+					modify_dateline:sessionStorage.getItem('modify_dateline'),
+					avatar:sessionStorage.getItem('user_avatar'),
+				realname:sessionStorage.getItem('realname')
+				}
+			}else{
+				// alert('请先登录~')
+				window.location='login.html'
+				$scope.userinfo = {
+					username:'用户未登录',
+					avatar:'img/login/default_avatar.png'
+				}
+			}	
+			//退出
+			$scope.exit = function(){
+				sessionStorage.clear()
+				$scope.userinfo = {
+					username:'用户未登录',
+					avatar:'img/login/default_avatar.png'
+				}
+				window.location= "login.html"
+			}
+			//搜索功能 搜索目标是课程title
+			$scope.search = function(){
+				if($("input.search-input").val()){
+					window.location = "searchres.html?content=" + $("input.search-input").val()
+				}else{
+					alert("请输入搜索内容")
+				}
+			}
+			//点击播放搜索结果
+			$scope.toPlaySearch = function(id){
+				$("#search_res").css("display","none")
+				window.location="live_play.html?video_id="+id
+			}
+			
+			//个人空间
+			$scope.toMyspace = function(){
+				if($scope.userinfo.username && $scope.userinfo.username!= "" && $scope.userinfo.username != "用户未登录"){
+					$.ajax({
+						type:"post",
+						url:domain+"/live_sns/mysns.php",
+						async:true,
+						data:{
+							user_id:$scope.userinfo.user_id,
+							token:$scope.userinfo.token,
+							client:2
+						},
+						dataType:'json',
+						success:function(res){
+						}
+					});
+					window.location=domain+"/live_sns/mysns.php?user_id="+$scope.userinfo.user_id+"&client=2";
+				}else{
+					alert("用户尚未登录，请先登录。")
+					window.location="login.html"
+				}
+			}
+			//定义页面跳转
+			$scope.toHome = function(){
+				window.location = "index.html"
+			}
+			$scope.toLive = function(){
+				window.location = "live.html"
+			}
+			$scope.toDemand = function(){
+				window.location = "demand.html"
+			}
+			$scope.toHomeEdu = function(){
+				window.location = "home-edu.html"
+			}
+			//！header区域代码结束
+			
+			//点击轮播图转到点播播放页面
+			$scope.toHomeeduPlay = function(id,ad_link){
+				window.location="homeedu_play.html?video_id="+id
+			}
+			
+			//lunbotu
+			var swiper = new Swiper('.swiper-container', {
+		        pagination: '.swiper-pagination',
+		        paginationClickable: true,
+		        direction: 'horizontal',
+		        autoplay: 2500,
+		        autoplayDisableOnInteraction: false,
+		        observer:true,//修改swiper自己或子元素时，自动初始化swiper
+				observeParents:true
+			});
+
+			// 轮播图获取
+			$http({
+					method:"get",
+					url:domain+"/ad/info/index?id=8"
+				}).then(function (response){
+					$scope.rotations = response.data.data.page_data
+					
+//					console.log($scope.rotations)
+				},function (response){
+			})
+			$scope.getPageData = function(limit,page,subject_id){
+					$.ajax({
+						type:"post",
+						url:domain+"/home/edu/index",
+						dataType:'json',
+						data:{
+							page:page,
+							limit:limit,
+							token:$scope.userinfo.token,
+							he_cate_id : $scope.he_cate_id
+						},
+						success:function(res){
+							console.log(res)
+							$scope.totalrows = res.data.total_rows;
+							$scope.homeedulist = res.data.page_data;
+							$scope.total_page = res.data.total_page;
+							if($scope.total_page<5){
+								$scope.visible_page=$scope.total_page
+							}else{
+								$scope.visible_page=5
+							}
+							// pagination
+							$scope.paginationModel = {
+						        totalPages: $scope.total_page,
+						        visiblePages: $scope.visible_page,
+						        currentPage: 1,
+						        onPageChange: function (num, type) {
+						            $('#p1').text(type + '：' + num);
+						            // 点击分页符重新检索列表
+						            $scope.getPageData(12,num,$scope.he_cate_id)
+						        }
+						    }
+							$scope.$apply()
+						}
+					});
+			}
+			$scope.totalrows = [];
+			$scope.total_page = [];
+			$scope.he_cate_id = 0;
+			//初始数据列表获取
+			$scope.getHomeEduList = function(){
+				$.ajax({
+					type:"post",
+					url:domain+"/home/edu/index",
+					async:true,
+					dataType:'json',
+					data:{
+						token:$scope.userinfo.token,
+						he_cate_id:0,
+						limit:12
+					},
+					success:function(res){
+						console.log(res)
+						$scope.homeedulist = res.data.page_data;
+						$scope.totalrows = res.data.total_rows;
+						$scope.total_page = res.data.total_page;
+						if($scope.total_page<5){
+							$scope.visible_page=$scope.total_page
+						}else{
+							$scope.visible_page=5
+						}
+						// pagination
+						$scope.paginationModel = {
+					        totalPages: $scope.total_page,
+					        visiblePages: $scope.visible_page,
+					        currentPage: 1,
+					        onPageChange: function (num, type) {
+					            $('#p1').text(type + '：' + num);
+					            // 点击分页符重新检索列表
+					            $scope.getPageData(12,num,$scope.he_cate_id)
+					            $scope.$apply()
+					        }
+					    }
+						$.jqPaginator('#pagination', $scope.paginationModel);
+						$scope.$apply()
+					}
+				});
+			}
+			$scope.getHomeEduList()
+		})
+	</script>
+	<script src="https://s22.cnzz.com/z_stat.php?id=1264448747&web_id=1264448747" language="JavaScript"></script>
+</html>

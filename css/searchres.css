@@ -1,0 +1,210 @@
+/**index.css*/
+/**@copyright = boz*/
+/**2017-02-14 shenjie*/
+
+html{
+	position: relative;
+	min-height: 100vh;
+	background-color: #F6F6F6;
+}
+body{
+	height: 100%;
+	background-color: #F6F6F6;
+	/*background-image: url(../img/bgmain.png);
+	background-position: 0 60px;
+	background-repeat: no-repeat;
+	background-size: 100% auto;*/
+}
+footer{
+	/*position: absolute;*/
+	bottom: 0;
+}
+section{
+	width: 1000px;
+	height: auto;
+	min-height: 500px;
+	margin: 0px auto;
+}
+div#subjectChoice{
+	width: 1000px;
+	height: auto;
+	overflow: hidden;
+	padding: 10px;
+}
+
+div#subjectChoice>p{
+	float: left;
+	height: inherit;
+	width: 100px;
+	text-align: left;
+	/*background: green;*/
+	font-size: 18px;
+	padding-top: 3px;
+	padding-left: 11px;
+}
+div#subjectChoice>div{
+	width: 1000px;
+}
+div#subjects{
+	height: auto;
+	overflow: hidden;
+	display: none;
+}
+div#subjectChoice a{
+	display: block;
+	float: left;
+	min-width: 80px;
+	height: 30px;
+	background: #FFF;
+	border-radius: 15px;
+	color: #000;
+	text-align: center;
+	line-height: 30px;
+	font-size: 16px;
+	margin-bottom: 4px;
+	margin-right: 16px;
+	text-decoration: none;
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+#fold{
+	width: 300px;
+	height: 28px;
+	margin-left: 200px;
+	display: inline-block;
+	text-align: center;
+	font-size: 18px;
+}
+
+#container{
+	width: 1000px;
+	height: 278px;
+	margin-top: 30px;
+	margin-bottom: 40px;
+	overflow: hidden;
+}
+#container>div{
+	cursor: pointer;
+}
+#container>div.left{
+	position: relative;
+	float: left;
+	width: 494px;
+	height: 100%;
+}
+#container>div.right{
+	position: relative;
+	float: right;
+	width: 494px;
+	height: 100%;
+}
+#container>.left>img,#container>.right>img{
+	position: absolute;
+	width: 494px;
+	height: 278px;
+}
+#container div.desc{
+	position: absolute;
+	width: 100%;
+	height: 66px;
+	bottom: 0;
+	background-color: rgba(0,0,0,0.6);
+	color: white;
+	padding: 10px;
+}
+#container div.desc>.title{
+	color: #FFF;
+	font-size: 13px;
+	overflow: hidden;
+	width: 100%;
+	height: 20px;
+}
+#container div.desc>.info{
+	color: #FFF;
+	font-size: 12px;
+	overflow: hidden;
+	width: 100%;
+	height: 26px;
+}
+#container div.desc>.info span{
+	color: #FFF;
+	font-size: 12px;
+}
+#container div.desc>.info button{
+	float: right;
+	background: #FFF;
+	color: #000;
+	font-size: 16px;
+	border: 1px #000;
+	width: 120px;
+	height: 30px;
+	line-height: 30px;
+	border-radius: 8px;
+}
+div.info .info_man,div.info .info_eye{
+	float: left;
+}
+div.info .info_date{
+	float: right;
+}
+
+
+/*small cube show*/
+ul#liveShow{
+	width: 1000px;
+	height: auto;
+	overflow: hidden;
+	margin-top: 20px;
+}
+
+ul#liveShow>li{
+	width: 241px;
+	height: 236px;
+	background: #FFF;
+	float: left;
+	margin-bottom: 10px;
+	overflow: hidden;
+	padding: 8px;
+	cursor: pointer;
+}
+
+ul#liveShow>li:nth-child(4n-2),ul#liveShow>li:nth-child(4n-1),ul#liveShow>li:nth-child(4n){
+	margin-left: 12px;
+}
+ul#liveShow>li>div.up{
+	width:225px;
+	height: 126.6px;
+}
+
+ul#liveShow>li>div.up>img{
+	width:225px;
+	height: 126.6px;
+}
+
+ul#liveShow>li>div.mid{
+	width:225px;
+	height: 40px;
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+ul#liveShow>li>div.btm{
+	/*width:225px;*/
+	overflow: hidden;
+	height: 20px;
+	line-height: 20px;
+}
+ul#liveShow>li>div.btm a,ul#liveShow>li>div.btm span{
+	color: #C9C9C9;
+}
+div.btm1{
+	float: left;
+}
+div.btm2{
+	float: right;
+}
+div.btm3{
+	float: left;
+	color: #C9C9C9;
+}

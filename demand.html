@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html  ng-app="demand" ng-controller="demandCtrl">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-control" content="no-cache">
+		<meta http-equiv="Cache" content="no-cache">
+		<title>点播</title>
+		<link rel="stylesheet" type="text/css" href="css/initialize.css"/>
+		<link rel="stylesheet" type="text/css" href="css/header.css"/>
+		<link rel="stylesheet" type="text/css" href="css/footer.css"/>
+		<link rel="stylesheet" type="text/css" href="css/demand.css"/>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="Shortcut Icon" href="favicon.ico" >
+		<script type="text/javascript" src="js/domain.js"></script>
+	</head>
+	<style type="text/css">
+	</style>
+	<style type="text/css">
+		span.btn1icon{
+			background: url(img/header/btn1.png) no-repeat;
+		}
+		span.btn2icon{
+			background: url(img/header/btn2.png) no-repeat;
+		}
+		span.btn3icon{
+			background: url(img/header/btn3_w.png) no-repeat;
+		}
+		span.btn4icon{
+			background: url(img/header/btn4.png) no-repeat;
+		}
+		.titleflow{
+			overflow: hidden;
+		}
+	</style>
+	<body>
+		<!--header-->
+		<ng-include src="'template/header.html'"></ng-include>
+		<!--section-->
+		<section>
+			<div id="kindChoice">
+				<p style="color: #A3A3A3;">类别</p><a href="javascript:void(0)" ng-click="fold()" id="fold">全部展开️</a>
+				<div id="kinds">
+					<a href="javascript:void(0)" style="color: #FFF;background-color: #4154E8;">点播</a>
+					<a href="javascript:void(0)">微课</a>
+				</div>
+			</div>
+			<div id="subjectChoice">
+				<p style="color: #A3A3A3;">学科</p>
+				<div id="subjects">
+					<a href="javascript:void(0)" ng-click='subjectSelect(0)' class="subject" style="color: #FFF;background-color: #4154E8;">全部</a>
+					<a ng-repeat="x in subjects track by $index" class="subject" ng-click='subjectSelect($index+1)' href="javascript:void(0)" ng-cloak>{{x.n}}</a>
+				</div>
+			</div>
+			<p style="width: 1000px;height: 40px;text-align: center;font-size: 16px;color: #A3A3A3;border-bottom: 1px solid #A3A3A3;border-top: 1px solid #A3A3A3;line-height: 40px;" ng-cloak>共有{{totalrows}}个视频</p>
+			<ul id="liveShow" ng-show = "dc">
+				<li ng-repeat="x in demandlist1" ng-click="toDemandPlay(x.dc_id)" ng-cloak>
+					<div class="up">
+						<img ng-src="{{x.dc_img}}"/>
+					</div>
+					<div class="mid titleflow">{{x.dc_title}}</div>
+					<div class="btm">
+						<div class="btm1" style="color: #C9C9C9;">
+							<img src="img/live/teacher_icon.png" class="list_icon"/>
+							{{x.dc_teacher}}
+						</div>
+						<div class="btm2" style="color: #C9C9C9;">
+							<img src="img/live/eye_icon.png" class="list_icon"/>
+							{{x.dc_demand_num}}
+						</div>
+					</div>
+					<div class="btm3"  style="margin-top: 5px;margin-left: -0px;">
+						<img src="img/live/date_icon.png" class="list_icon"/>
+						{{ x.create_dateline * 1000 | date:'short' }}
+					</div>
+				</li>
+			</ul>
+			<ul id="liveShow" ng-show = "mc">
+				<li ng-repeat="x in demandlist1" ng-click="toMcPlay(x.mc_id)" ng-cloak>
+					<div class="up">
+						<img ng-src="{{x.mc_img}}"/>
+					</div>
+					<div class="mid titleflow">{{x.mc_title}}</div>
+					<div class="btm">
+						<div>
+							<img src="img/live/teacher_icon.png" class="list_icon"/>
+							<a href="">{{x.mc_teacher}}</a>
+						</div>
+						<div style="margin-left: 10px;">
+							<img src="img/live/eye_icon.png" class="list_icon"/>
+							<span>{{x.mc_demand_num}}</span>
+						</div>
+						<div style="margin-left: 10px;">
+							<img src="img/live/date_icon.png" class="list_icon"/>
+							<span>{{ x.create_dateline * 1000 | date:'short' }}</span>
+						</div>
+					</div>
+				</li>
+			</ul>
+			
+			<ul class="pagination" id="pagination" style="margin-left:50%;transform: translate(-50%);"></ul>
+		</section>
+		
+		<!--footer-->
+		<ng-include src="'template/footer.html'"></ng-include>
+
+	</body>
+	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript" src="js/public.js"></script>
+	<script type="text/javascript" src="js/jqPaginator.js"></script>
+	<script type="text/javascript">
+		var headerApp = angular.module("demand",[])
+		headerApp.controller("demandCtrl",function($scope){
+			$scope.total_page = 1 ;
+			$scope.isfold = false;
+			$scope.fold = function(){
+				if($scope.isfold){
+					$scope.isfold = false
+					$('#fold').text('全部展开')
+					$('#kindChoice').css('height','40px')
+					$('#subjectChoice').css('display','none')
+				}else{
+					$scope.isfold = true
+					$('#fold').text('全部收起')
+					$('#kindChoice').css('height','auto')
+					$('#subjectChoice').css('display','block')
+				}
+			}
+			
+			//header区域通用js代码
+			//get session storage
+			if(sessionStorage.getItem('username',$scope.username)){
+				$scope.userinfo = {
+					username:sessionStorage.getItem('username'),
+					token:sessionStorage.getItem('token'),
+					user_id:sessionStorage.getItem('user_id'),
+					user_phone:sessionStorage.getItem('user_phone'),
+					user_role_id:sessionStorage.getItem('user_role_id'),
+					ischeck:sessionStorage.getItem('ischeck'),
+					create_dateline:sessionStorage.getItem('create_dateline'),
+					modify_dateline:sessionStorage.getItem('modify_dateline'),
+					avatar:sessionStorage.getItem('user_avatar'),
+				realname:sessionStorage.getItem('realname')
+				}
+			}else{
+				// alert('请先登录~')
+				window.location='login.html'
+				$scope.userinfo = {
+					username:'用户未登录',
+					avatar:'img/login/default_avatar.png'
+				}
+			}	
+			//退出
+			$scope.exit = function(){
+				sessionStorage.clear()
+				$scope.userinfo = {
+					username:'用户未登录',
+					avatar:'img/login/default_avatar.png'
+				}
+				window.location= "login.html"
+			}
+			//搜索功能 搜索目标是课程title
+			$scope.search = function(){
+				if($("input.search-input").val()){
+					window.location = "searchres.html?content=" + $("input.search-input").val()
+				}else{
+					alert("请输入搜索内容")
+				}
+			}
+			//点击播放搜索结果
+			$scope.toPlaySearch = function(id){
+				$("#search_res").css("display","none")
+				window.location="live_play.html?video_id="+id
+			}
+			
+			//个人空间
+			$scope.toMyspace = function(){
+				if($scope.userinfo.username && $scope.userinfo.username!= "" && $scope.userinfo.username != "用户未登录"){
+					$.ajax({
+						type:"post",
+						url:domain+"/live_sns/mysns.php",
+						async:true,
+						data:{
+							user_id:$scope.userinfo.user_id,
+							token:$scope.userinfo.token,
+							client:2
+						},
+						dataType:'json',
+						success:function(res){
+						}
+					});
+					window.location=domain+"/live_sns/mysns.php?user_id="+$scope.userinfo.user_id+"&client=2";
+				}else{
+					alert("用户尚未登录，请先登录。")
+					window.location="login.html"
+				}
+			}
+			//定义页面跳转
+			$scope.toHome = function(){
+				window.location = "index.html"
+			}
+			$scope.toLive = function(){
+				window.location = "live.html"
+			}
+			$scope.toDemand = function(){
+				window.location = "demand.html"
+			}
+			$scope.toHomeEdu = function(){
+				window.location = "home-edu.html"
+			}
+			//！header区域代码结束
+			
+			//点击轮播图转到点播播放页面
+			$scope.toDemandPlay = function(id){
+				window.location="demand_play.html?video_id="+id
+			}
+			$scope.toMcPlay = function(id){
+				window.location="mc_play.html?video_id="+id
+			}
+			
+			//点播列表获取
+			$scope.demandInit = function(){
+				$.ajax({
+				type:"post",
+				url:domain+"/demand/course/index",
+				dataType:'json',
+				data:{
+					limit:12,
+					token:$scope.userinfo.token
+				},
+				success:function(res){
+					$scope.totalrows = res.data.total_rows;
+					$scope.total_page = res.data.total_page;
+					$scope.demandlist1 = res.data.page_data
+					// pagination
+					$scope.paginationModel = {
+				        totalPages: $scope.total_page,
+				        visiblePages: 5,
+				        currentPage: 1,
+				        onPageChange: function (num, type) {
+				            $('#p1').text(type + '：' + num);
+				            // 点击分页符重新检索列表
+				            $scope.getPageData(12,num,$scope.dc_subject_id)
+				        }
+				    }
+					$.jqPaginator('#pagination', $scope.paginationModel);
+					$scope.$apply()
+				}
+			});
+			}
+			$scope.demandInit();
+			
+			$scope.subjects = [{"v":"jcsub01","n":"语文"},
+            {"v":"jcsub02","n":"数学"},
+            {"v":"jcsub03","n":"英语"},
+            {"v":"jcsub13","n":"物理"},
+            {"v":"jcsub14","n":"化学"},
+            {"v":"jcsub15","n":"生物"},
+            {"v":"jcsub08","n":"思想品德"},
+            {"v":"jcsub09","n":"思想政治"},
+            {"v":"jcsub06","n":"品德与生活"},
+            {"v":"jcsub07","n":"品德与社会"},
+            {"v":"jcsub11","n":"历史"},
+            {"v":"jcsub10","n":"历史与社会"},
+            {"v":"SUB27","n":"体育"},
+            {"v":"jcsub12","n":"地理"},
+            {"v":"SUB53","n":"道德与法治"},
+            {"v":"jcsub16","n":"科学"},
+            {"v":"jcsub18","n":"美术"},
+            {"v":"jcsub19","n":"体育与健康"},
+            {"v":"jcsub20","n":"音乐"},
+            {"v":"jcsub21","n":"信息技术"},
+            {"v":"jcsub22","n":"通用技术"},
+            {"v":"jcsub23","n":"综合实践活动"},
+            {"v":"jcsub24","n":"健康（学前）"},
+            {"v":"jcsub25","n":"科学（学前）"},
+            {"v":"jcsub26","n":"社会（学前）"},
+            {"v":"jcsub27","n":"艺术（学前）"},
+            {"v":"jcsub28","n":"语言（学前）"},
+            {"v":"jcsub29","n":"科技制作活动"},
+            {"v":"jcsub30","n":"劳动与技术"},
+            {"v":"jcsub31","n":"生活与科技"},
+            {"v":"SUB7","n":"心理健康教育"},
+            {"v":"SUB37","n":"计算"},
+            {"v":"SUB46","n":"研究性学习活动"},
+            {"v":"SUB48","n":"环境教育"},
+            {"v":"SUB50","n":"安全教育"},
+            {"v":"SUB49","n":"传统文化"},
+            {"v":"SUB51","n":"人生规划"}];
+			
+			$scope.kind = 0;
+			$scope.dc = true;
+			$scope.mc = false;
+			
+			//点击筛选功能
+			$("div#kinds>a").click(function(){
+				$("div#kinds>a").css("background-color","#FFF")
+				$("div#kinds>a").css("color","black")
+				$(this).css("background-color","#4154E8")
+				$(this).css("color","#FFF")
+				if($(this).index()==0){
+					$scope.kind = 0;$scope.dc = true;$scope.mc = false
+				}else if($(this).index()==1){
+					$scope.kind = 1;$scope.dc = false;$scope.mc = true;
+				}
+				console.log($scope.kind)
+				$scope.subjectSelect($scope.index)
+			})
+				$scope.index = 0;
+			$scope.subjectSelect=function(index){
+				$scope.index = index
+				console.log(index)
+				$("div#subjects>a").css("background-color","#FFF")
+				$("div#subjects>a").css("color","black")
+				$(".subject").eq(index).css("background-color","#4154E8")
+				$(".subject").eq(index).css("color","#FFF")
+				if(index==0){
+					$scope.dc_subject_id = 0;
+				}else{
+					$scope.dc_subject_id = $scope.subjects[index-1].v;
+					console.log($scope.dc_subject_id)
+				}
+				//点播列表获取
+				if($scope.kind==0){
+					$.ajax({
+						type:"post",
+						url:domain+"/demand/course/index",
+						dataType:'json',
+						data:{
+							token:$scope.userinfo.token,
+							dc_subject_id : $scope.dc_subject_id
+						},
+						success:function(res){
+							console.log(res)
+							$scope.totalrows = res.data.total_rows;
+							$scope.total_page = res.data.total_page;
+							$scope.demandlist1 = res.data.page_data;
+							// pagination
+							$scope.paginationModel = {
+						        totalPages: $scope.total_page,
+						        visiblePages: 5,
+						        currentPage: 1,
+						        onPageChange: function (num, type) {
+						            $('#p1').text(type + '：' + num);
+						            // 点击分页符重新检索列表
+						            $scope.getPageData(12,num,$scope.dc_subject_id)
+						        }
+						    }
+							$.jqPaginator('#pagination', $scope.paginationModel);
+							$scope.$apply()
+						}
+					});
+				}else if($scope.kind==1){
+					$.ajax({
+						type:"post",
+						url:domain+"/micro/course/index",
+						dataType:'json',
+						data:{
+							limit:12,
+							mc_subject_id : $scope.dc_subject_id
+						},
+						success:function(res){
+							console.log(res)
+							$scope.totalrows = res.data.total_rows;
+							$scope.total_page = res.data.total_page;
+							$scope.demandlist1 = res.data.page_data;
+							// pagination
+							$scope.paginationModel = {
+						        totalPages: $scope.total_page,
+						        visiblePages: 5,
+						        currentPage: 1,
+						        onPageChange: function (num, type) {
+						            $('#p1').text(type + '：' + num);
+						            // 点击分页符重新检索列表
+						            $scope.getPageData(12,num,$scope.dc_subject_id)
+						        }
+						    }
+							$.jqPaginator('#pagination', $scope.paginationModel);
+							$scope.$apply()
+						}
+					});
+				}
+			}
+			
+			$scope.getPageData = function(limit,page,subject_id){
+				if($scope.kind==0){
+					$.ajax({
+						type:"post",
+						url:domain+"/demand/course/index",
+						dataType:'json',
+						data:{
+							page:page,
+							limit:limit,
+							token:$scope.userinfo.token,
+							dc_subject_id : $scope.dc_subject_id
+						},
+						success:function(res){
+							console.log(res)
+							$scope.totalrows = res.data.total_rows;
+							$scope.demandlist1 = res.data.page_data;
+							$scope.total_page = res.data.total_page;
+							// pagination
+							$scope.paginationModel = {
+						        totalPages: $scope.total_page,
+						        visiblePages: 5,
+						        currentPage: 1,
+						        onPageChange: function (num, type) {
+						            $('#p1').text(type + '：' + num);
+						            // 点击分页符重新检索列表
+						            $scope.getPageData(12,num,$scope.dc_subject_id)
+						        }
+						    }
+							
+//							$.jqPaginator('#pagination', $scope.paginationModel);
+							
+							$scope.$apply()
+						}
+					});
+				}else if($scope.kind==1){
+					$.ajax({
+						type:"post",
+						url:domain+"/micro/course/index",
+						dataType:'json',
+						data:{
+							page:page,							
+							limit:limit,
+							mc_subject_id : $scope.dc_subject_id
+						},
+						success:function(res){
+							console.log(res)
+							$scope.totalrows = res.data.total_rows;
+							$scope.demandlist1 = res.data.page_data;
+							$scope.total_page = res.data.total_page;
+							// pagination
+							$scope.paginationModel = {
+						        totalPages: $scope.total_page,
+						        visiblePages: 5,
+						        currentPage: 1,
+						        onPageChange: function (num, type) {
+						            $('#p1').text(type + '：' + num);
+						            // 点击分页符重新检索列表
+						            $scope.getPageData(12,num,$scope.dc_subject_id)
+						        }
+						    }
+							
+							$scope.$apply()
+						}
+					});
+				}
+			}
+			
+			
+		})
+	</script>
+	<script src="https://s22.cnzz.com/z_stat.php?id=1264448747&web_id=1264448747" language="JavaScript"></script>
+</html>

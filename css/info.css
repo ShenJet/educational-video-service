@@ -1,0 +1,131 @@
+/*index.css         */
+/*@copyright = boz  */
+/*2017-02-14 shenjie*/
+*{
+	color: #4A4A4A;
+}
+section{
+	width: 1200px;
+	height: auto;
+	margin: 0px auto;
+	/*background: darkcyan;*/
+	overflow: hidden;
+}
+.infoBg{
+	width: 1200px;
+	height: 300px;
+	margin: 0 auto;
+	background-image: url(../img/info/info_bg.jpg);
+	background-position: 0 0;
+	background-size: 100% 100%;
+	padding-top: 86px;
+	margin-bottom: 50px;
+}
+.bigAvatar{
+	width: 120px;
+	height: 120px;
+	border: 4px solid #FFF;
+	border-radius: 50%;
+	background: #CCC;
+	margin-left: 50%;
+	transform: translate(-50%);
+	overflow: hidden;
+}
+.bigAvatar img{
+	width: 100%;
+	height: 100%;
+}
+
+.main{
+	padding-bottom: 30px;
+	position: relative;
+	height: 710px;
+}
+
+ul.sidebar{
+	width: 200px;
+	background: #FFF;
+	border-radius: 4px;
+	position: absolute;
+	left: 100px;
+	top: 0;
+}
+ul.sidebar li{
+	width: 200px;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 40px;
+	cursor: pointer;
+	/*background: red;*/
+}
+ul.sidebar li:hover{
+	background: #EEE;
+}
+.infoMain{
+	width: 778px;
+	height: 694px;
+	position: absolute;
+	left: 320px;
+	background: #FFF;
+}
+.rowmain{
+	width: 100%;
+	/*height: 10px;*/
+	overflow: hidden;
+	min-height: 50px;
+}
+.row_l{
+	width: 28%;
+	float: left;
+	text-align: right;
+	margin: 0;
+}
+.row_r{
+	width: 70%;
+	float: left;
+	padding-left: 20px;
+}
+.row_r>p{
+	margin-left: 20px;
+	margin-top: 120px;
+	float: left;
+}
+.upload{
+	width: 160px;
+	height: 160px;
+	float: left;
+	background: #CCC;
+	text-align: center;
+	cursor: pointer;
+	position: relative;
+	background-image: url(../img/info/head.png);
+	background-size: 60% auto;
+	background-repeat: no-repeat;
+	background-position: 48% 40%;
+}
+.upload p{
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	margin:0;
+}
+
+#file{
+	width: 160px;
+	height: 160px;
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.subBtn{
+	width: 100px;
+	height: 30px;
+	border-radius: 15px;
+	background: #4153E8;
+	color: #FFF;
+	line-height: 30px;
+	outline: none;
+	text-align: center;
+	border: 0;
+}

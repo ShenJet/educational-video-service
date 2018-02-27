@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html ng-app="header" ng-controller="headerCtrl">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-control" content="no-cache">
+		<meta http-equiv="Cache" content="no-cache">
+		<title>直播视频播放页</title>
+		<link rel="stylesheet" type="text/css" href="css/footer.css"/>
+		<link rel="stylesheet" type="text/css" href="css/play.css?v=2017082600"/>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/initialize.css"/>
+		<link rel="stylesheet" type="text/css" href="css/comment.css"/>
+		<link rel="Shortcut Icon" href="favicon.ico" >
+		<script type="text/javascript" src="../js/domain.js"></script>
+		<script type="text/javascript">
+			// 浏览器判断
+			var v = navigator.userAgent
+			var reg = "Mozilla"
+			var ie8low = v.indexOf(reg) >= 0
+			if(ie8low){
+				if(parseInt(v.charAt(8))<5){
+					window.location = "../browserUpdate.html"
+				}
+			}
+		</script>
+		<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/angular.min.js"></script>
+		<script type="text/javascript" src="js/public.js"></script>
+		<script type="text/javascript" src="js/comment.js?v=170918"></script>
+		<script type="text/javascript" src="js/jqPaginator.js"></script>
+	</head>
+	<style type="text/css">
+	div.btn2{
+		background: #3F4DED;
+		color: #FFF;
+	}
+	div.btn2:hover{
+		color: #FFF;
+	}
+	span.btn1icon{
+		background: url(img/header/btn1.png) no-repeat;
+	}
+	span.btn2icon{
+		background: url(img/header/btn2_w.png) no-repeat;
+	}
+	span.btn3icon{
+		background: url(img/header/btn3.png) no-repeat;
+	}
+	span.btn4icon{
+		background: url(img/header/btn4.png) no-repeat;
+	}
+	.video { 
+		OVERFLOW: hidden; WIDTH: 100%; POSITION: relative;
+		height: 562.5px;width: 1000px;
+	}
+	.close_light_bg {DISPLAY: none; BACKGROUND: #000; FILTER: alpha(opacity = 95); LEFT: 0px; WIDTH: 100%; POSITION: absolute; TOP: 0px; HEIGHT: 100%; opacity: .95}
+	#chatRoom{
+		/*display: none;*/
+	}
+	</style>
+	<body>
+		<!--section-->
+		<section>
+			<p id="title" style="font-size: 22px;width: 60%;float: left;" ng-cloak>{{title}}</p>
+			<div class="VContain">
+				<div class="video video00 bg" id="CuPlayer00" style="right: 0px;top: 0px;background-color: #000;">
+					<p ng-show="!bftime&&!aftime"><a style="font-size: 30px;color: #f5f5f5;text-decoration: underline;"  target="_blank">视频加载中，请稍后~</a></p>
+					<p  ng-show="!bftime&&!aftime"><a class="flash" style="font-size: 30px;color: #000;text-decoration: underline;" href="http://www.macromedia.com/go/getflashplayer" target="_blank">请点击此处安装/启用flash插件</a></p>
+					<script type="text/javascript">
+						setTimeout(function(){
+							$(".flash").css("color","#f5f5f5")
+						},4000)
+					</script>
+					<img class="hasNotStart" src="img/hasNotStart.png" ng-show="bftime" ng-cloak />
+					<h1 ng-show="aftime" ng-cloak>直播已结束</h1>
+				</div>
+				<button class="lowBtn rateBtn" ng-click='toLow()' style='width: 80px;height: 36px;text-align: center;border-radius: 18px;background: #CCC;color: #FFF;border: none;margin-top: 10px;'>流畅</button>
+				<button class="mediumBtn rateBtn" ng-click='toMedium()' style='width: 80px;height: 36px;text-align: center;border-radius: 18px;background: #CCC;color: #FFF;border: none;margin-top: 10px;'>标清</button>
+				<button class="highBtn rateBtn" ng-click='toHigh()' style='width: 80px;height: 36px;text-align: center;border-radius: 18px;background: #3F4DED;color: #FFF;border: none;margin-top: 10px;'>高清</button>
+				<button class="fullplay" onclick='toFullScreen()' style='width: 80px;height: 36px;text-align: center;border-radius: 18px;background: #CCC;color: #FFF;border: none;margin-top: 10px;'>全屏播放</button>
+				</div>
+				<script type="text/javascript">
+					// 主次视频切换
+					function exchange(){
+						var width00 = $("#CuPlayer00").css("width")
+						var width01 = $("#CuPlayer01").css("width")
+						if(parseInt(width00) < parseInt(width01)){
+							$("#CuPlayer00").addClass("bg")
+							$("#CuPlayer00").removeClass("sm")
+							$("#CuPlayer01").addClass("sm")
+							$("#CuPlayer01").removeClass("bg")
+							$("#modeHand").css("top","0")
+							$("#modeHand").css("right","200px")
+							$("#CuPlayer00").css("top","0")
+							$("#CuPlayer00").css("right","0")
+							$("#CuPlayer01").css("top","0")
+							$("#CuPlayer01").css("right","0")
+//							$("#CuPlayer01").css("width","200px")
+//							$("#CuPlayer01").css("height","120px")
+							
+						}else if(parseInt(width00) > parseInt(width01)){
+							$("#CuPlayer00").addClass("sm")
+							$("#CuPlayer00").removeClass("bg")
+							$("#CuPlayer01").addClass("bg")
+							$("#CuPlayer01").removeClass("sm")
+							$("#modeHand").css("top","0")
+							$("#modeHand").css("right","200px")
+							$("#CuPlayer00").css("top","0")
+							$("#CuPlayer00").css("right","0")
+							$("#CuPlayer01").css("top","0")
+							$("#CuPlayer01").css("right","0")
+//							$("#CuPlayer00").css("width","200px")
+//							$("#CuPlayer00").css("height","120px")
+						}
+//						else{
+							$(".sm").css("width","200px")
+							$(".sm").css("height","120px")
+							$(".sm").css("top","0")
+							$(".sm").css("right","0")
+							$(".bg").css("width","1000px")
+							$(".bg").css("height","562.5px")
+							$(".bg").css("top","0")
+							$(".bg").css("right","0")
+//						}
+							
+					}
+					var isHide = false
+					function hideSm(){
+						if(!isHide){
+							$(".sm").css("visibility","hidden")
+							$("#modeHand").css("visibility","hidden")
+							$(".hideSm").text("显示副窗口")
+							isHide = !isHide
+						}else{
+							$(".sm").css("visibility","visible")
+							$("#modeHand").css("visibility","visible")
+							$(".hideSm").text("隐藏副窗口")
+							isHide = !isHide
+						}
+						
+					}
+					var isFull = false
+					function toFullScreen(){
+						if(!isFull){
+							$("section").css("width","100%")
+							$(".bg").css("width","100vw")
+							$(".bg").css("height","57vw")
+							$(".fullplay").css("backgroundColor","rgb(63, 77, 237)")
+							$(".fullplay").text("退出全屏")
+						}else{
+							$("section").css("width","1000px")
+							$(".fullplay").text("全屏播放")
+							$(".fullplay").css("backgroundColor","#CCC")
+							$(".bg").css("width","1000px")
+							$(".bg").css("height","562.5px")
+						}
+						isFull = !isFull
+					}
+					document.addEventListener("keydown",function(e){
+						var keycode = keynum = window.event ? e.keyCode : e.which;
+//						console.log(keycode)
+						if(keycode==27){
+							toFullScreen()
+						}
+					})
+				</script>
+			</div>
+			
+			<div id="intro"  ng-show="!noToken">
+				<p ng-cloak>课程简介：{{intro}}</p>
+			</div>
+			
+			<!--评论区域-->
+			<ul class="nav-head"  ><!--//ng-show="!noToken"-->
+				<!--<li onclick="nav_tabClick0()" class="nav-tabs active">课程作业</li>-->
+				<!--<li onclick="nav_tabClick1()" class="nav-tabs">评论问答</li>-->
+				<li onclick="nav_tabClick2()" class="nav-tabs">互动讨论</li>
+			</ul>
+			<div id="work" class="mainCon"  ng-show="!noToken">
+				<iframe  ng-show='workshow' src="" width="1000" height="1400" id="workframe"></iframe>
+				<h1 ng-show='!workshow'>当前课程无作业练习</h1>
+			</div>
+		<!--<ul id="comment" class="mainCon" ng-show="!noToken">-->
+			<ul id="comment" class="mainCon" >
+				<h1 ng-show='!comment_list'>当前课程无作业练习</h1>
+				<li ng-repeat="x in comment_list track by $index" class="comment_content">
+					<div class="comment_lr comment_l">
+						<div class="avatar">
+							<img ng-src="{{x.user_avatar}}"/>
+							
+						</div>
+						<p class="user">{{x.user_realname}}</p>
+					</div>
+					<div class="comment_lr comment_r">
+						<p class="text_content">
+							{{x.cq_content}}
+						</p>
+						<p class="commenter_info">
+							<span>{{x.create_dateline*1000 | date:"yyyy-MM-dd HH:mm:ss"}}</span> | <span class="clickgood"></span>
+							<a href="javascript:void(0)" ng-click="clickGood(x.ca_id,x.is_set_good,x)">点赞({{x.good_num}})</a> 
+							 | <a href="javascript:void(0)" ng-click="getSecReply($index,1,10,x.cq_key_id,x.cq_key_type,x.cq_pid,x.ca_id)">回复{{x.cq_sub_num==0?'(0)':'('+x.cq_sub_num+')'}}</a>
+						</p>
+						<ul id="" class="{{'reply_2lv_'+x.ca_id}} reply_2lv_list">
+							<a ng-click="rollUpRply(x.ca_id)" style="color: #3F4DED;">>>收起回复<<</a>
+							<li ng-repeat="r in reply_2lv_list[$index]" class="">
+								
+								<p style="margin-bottom: 0;padding: 6px;"><i style="color: #3F4DED;">{{r.user_realname}} 的回复：</i> {{r.cq_content}}</p>
+							</li>
+							<!--分页-->
+							<ul class="pagination pagination2lv" id="{{'pagination2lv_'+x.ca_id}}" style="margin: 0;"></ul>
+							
+							<textarea name="reply_2lv_textarea" class="reply_2lv_textarea {{'reply_2lv_textarea_'+x.ca_id}}" rows="" cols=""></textarea>
+							<br />
+							<button ng-click="subComment2lv($index,x.cq_key_id,x.cq_key_type,x.cq_pid,x.ca_id)">回复</button>
+						</ul>
+					</div>
+				</li>
+				<ul class="pagination" id="pagination" style="margin-left:50%;transform: translate(-50%);"></ul>
+				<hr />
+				<textarea name="comment" id="commentArea" rows="" cols="" ></textarea>
+				<br />
+				<button ng-click="subComment()" class="replybtn_main">回复楼主</button>
+			</ul>
+			<div id="chatRoom" class="mainCon" style="height: 600px;">
+				<iframe src="" width="998" height="600"></iframe>
+			</div>
+		</section>
+		<!--footer-->
+		<ng-include src="'template/footer.html'" ng-show="!noToken"></ng-include>
+	</body>
+	<script type="text/javascript" src="rtmpPlayer/js/swfobject.js"></script>
+	<script language="javascript" src="rtmpPlayer/js/action.js" type="text/javascript"></script>
+	<script type="text/javascript" >
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "https://hm.baidu.com/hm.js?ee7bf77607becfc0f2583781081bd70c";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+	<script type="text/javascript">
+	function getLight(pars){if(pars=="open"){close_light(this)}else{close_light(this)}};function thisMovie(movieName){if(navigator.appName.indexOf("Microsoft")!=-1){return window[movieName]}else{return document[movieName]}}
+	</script>
+	<script src='js/ws_io.js'></script>
+	<script type="text/javascript">
+		var headerApp = angular.module("header",[])
+		headerApp.controller("headerCtrl",function($scope,$http){
+						
+			$(".rateBtn").mouseenter(function(){
+				if($(this).css("backgroundColor") == "rgb(63, 77, 237)"){
+					$(this).css("backgroundColor","rgb(63, 77, 237)")
+				}else{
+					$(this).css("backgroundColor","#0099FF")
+				}
+			})
+			$(".rateBtn").mouseleave(function(){
+				if($(this).css("backgroundColor") == "rgb(0, 153, 255)"){
+					$(this).css("backgroundColor","#CCC")
+				}
+			})
+			$scope.toLow= function(){
+				$(".rateBtn").css("background","#CCC")
+				$(".lowBtn").css("background","#3F4DED")
+				so.addVariable("JcScpServer", $scope.deskServer_l); //流媒体服务器
+				so.addVariable("JcScpVideoPath", $scope.deskRoom_l); //视频文件地址
+				so.addVariable("JcScpAutoPlay","yes"); //是否自动播放
+				so.write("CuPlayer00");
+			}
+			$scope.toMedium = function(){
+				$(".rateBtn").css("background","#CCC")
+				$(".mediumBtn").css("background","#3F4DED")
+				
+				so.addVariable("JcScpServer", $scope.deskServer_m); //流媒体服务器
+				so.addVariable("JcScpVideoPath", $scope.deskRoom_m); //视频文件地址
+				so.addVariable("JcScpAutoPlay","yes"); //是否自动播放
+				so.write("CuPlayer00");
+			}
+			 $scope.toHigh = function(){
+				$(".rateBtn").css("background","#CCC")
+				$(".highBtn").css("background","#3F4DED")
+				
+				so.addVariable("JcScpServer", $scope.deskServer_h); //流媒体服务器
+				so.addVariable("JcScpVideoPath", $scope.deskRoom_h); //视频文件地址
+				so.addVariable("JcScpAutoPlay","yes"); //是否自动播放
+				so.write("CuPlayer00");
+			}
+			$scope.getVideo = function(){
+				$.ajax({
+				type:"post",
+				url:domain+"/live/course/detail/1",
+				dataType:'json',
+				data:{
+					id:video_id
+				},
+				success:function(res){
+					console.log(res)
+					if(res.data){
+						$scope.intro = res.data.lc_abstract;
+						$scope.title = res.data.lc_title;
+						$scope.$apply();
+					}
+					console.log(0)
+					if(res&&res.data&&res.data.student&&res.data.student!=""&&res.data.student.high.camera!=""||res&&res.data&&res.data.student&&res.data.student!=""&&res.data.student.high.desktop!=""){
+						$scope.cq_key_id = res.data.lc_id
+						// 获取评论列表函数执行
+						$scope.getComments(1 ,10 ,parseInt(res.data.lc_id) ,1);
+//						console.log($scope.comment_list)
+						var visible = $scope.totalpage>10?10:$scope.totalpage
+//						console.log($scope.q_totalrows,visible)
+						//分页
+						if($scope.totalpage>0){
+							$scope.paginationModel = {
+						        totalPages: $scope.totalpage,
+	//							totalCounts:80,
+								pageSize:10,
+						        visiblePages: visible,
+						        currentPage: 1,
+						        onPageChange: function (num, type) {
+						            $('#p1').text(type + '：' + num);
+						            // 点击分页符重新检索列表
+						            $scope.getComments(num ,10 ,$scope.cq_key_id,1 )
+						        }
+						    }
+							$.jqPaginator('#pagination', $scope.paginationModel);
+						}
+						console.log(1)
+						var now = new Date()
+						if(now.getTime()/1000<parseInt(res.data.lc_start_time)){
+							$scope.bftime = true
+							$scope.$apply()
+							console.log("$scope.bftime")
+//							return
+						}
+						if(now.getTime()/1000>parseInt(res.data.lc_end_time)){
+							$scope.aftime = true
+							$scope.$apply()
+							console.log("$scope.aftime")
+//							return
+						}
+						
+						console.log(2)
+						//视频文件及略缩图--------------------------
+						$scope.deskLink_l = res.data.student.low.desktop.split("/") || ""
+						$scope.deskServer_l = $scope.deskLink_l[0]+"//"+$scope.deskLink_l[2]+"/"+$scope.deskLink_l[3]
+						$scope.deskRoom_l = $scope.deskLink_l[4]
+						
+						$scope.cameLink_l = res.data.student.low.camera.split("/")
+						$scope.cameServer_l = $scope.cameLink_l[0]+"//"+$scope.cameLink_l[2]+"/"+$scope.cameLink_l[3]
+						$scope.cameRoom_l = $scope.cameLink_l[4]
+						var deskLink_l = res.data.student.low.desktop.split("/")
+						var deskServer_l = deskLink_l[0]+"//"+deskLink_l[2]+"/"+deskLink_l[3]
+						var deskRoom_l = deskLink_l[4]
+						var cameLink_l = res.data.student.low.camera.split("/")
+						var cameServer_l = cameLink_l[0]+"//"+ cameLink_l[2]+"/"+ cameLink_l[3]
+						var cameRoom_l =  cameLink_l[4]
+						
+						$scope.deskLink_m = res.data.student.medium.desktop.split("/")
+						$scope.deskServer_m = $scope.deskLink_m[0]+"//"+$scope.deskLink_m[2]+"/"+$scope.deskLink_m[3]
+						$scope.deskRoom_m = $scope.deskLink_m[4]
+						
+						$scope.cameLink_m = res.data.student.medium.camera.split("/")
+						$scope.cameServer_m = $scope.cameLink_m[0]+"//"+$scope.cameLink_m[2]+"/"+$scope.cameLink_m[3]
+						$scope.cameRoom_m = $scope.cameLink_m[4]
+						
+						$scope.deskLink_h = res.data.student.high.desktop.split("/")
+						$scope.deskServer_h = $scope.deskLink_h[0]+"//"+$scope.deskLink_h[2]+"/"+$scope.deskLink_h[3]
+						$scope.deskRoom_h = $scope.deskLink_h[4]
+						
+						$scope.cameLink_h = res.data.student.high.camera.split("/")
+						$scope.cameServer_h = $scope.cameLink_h[0]+"//"+$scope.cameLink_h[2]+"/"+$scope.cameLink_h[3]
+						$scope.cameRoom_h = $scope.cameLink_h[4]
+						console.log(3)
+						// 初始化视频播放器
+						var so = new SWFObject("rtmpPlayer/player.swf","myCuPlayer","100%","100%","9","#000000");
+						so.addParam("allowfullscreen","true");
+						so.addParam("allowscriptaccess","always");
+						so.addParam("wmode","opaque");
+						so.addParam("quality","high");
+						so.addParam("salign","lt");
+						so.addVariable("JcScpFile","rtmpPlayer/CuSunV4set.xml"); //配置文件
+						so.addVariable("JcScpServer", $scope.deskServer_h); //流媒体服务器
+						so.addVariable("JcScpVideoPath", $scope.deskRoom_h); //视频文件地址
+						so.addVariable("JcScpAutoPlay","yes"); //是否自动播放
+						console.log(4)
+						so.write("CuPlayer00");
+					}
+				}
+			})
+			}
+			//预处理连接
+			$scope.bftime = false
+			$scope.aftime = false
+			//url参数：videoid、ticket
+			var paras = window.location.href.split("?")[1]
+			if(paras.search("ticket")==-1){
+				window.location = domain+"/bozvideolive/login.html"
+			}
+			var paraArr = paras.split("&")
+			for(var i=0;i<paraArr.length;i++){
+				if(paraArr[i].search("id")!=-1){
+					var video_id = parseInt(paraArr[i].split("=")[1])
+				}
+				if(paraArr[i].search("ticket")!=-1){
+					var ticket = paraArr[i].split("=")[1]
+				}
+				if(paraArr[i].search("username")!=-1){
+					var username = paraArr[i].split("=")[1]
+				}
+			}
+			if(!ticket || ticket == "" || ticket==undefined){
+				window.location = domain+"/bozvideolive/login.html"
+			}
+			$scope.auth = function(){
+				console.log(username)
+				$.ajax({
+					type:"get",
+					url:domain+"/user/main/check_ticket",
+					async:true,
+					dataType:"json",
+					data:{
+						ticket:ticket,
+						api_debug:1,
+						username:username
+					},
+					success:function(res){
+						console.log(res)
+						$scope.token = res.data.token ;
+						$scope.userid = res.data.user_id ;
+						$scope.username = res.data.user_name ;
+						if(res.code!="1"){
+							window.location = domain+"/bozvideolive/login.html"
+						}else{
+							if(res.data.token==""||res.data.token==undefined){
+								var cookieArr = document.cookie.split(";")
+								for(var i=0;i<cookieArr.length;i++){
+									//3aGi_2132=>YNV1 2017-10-26
+									if(cookieArr[i].search("YNV1_auth") != -1){
+										$scope.token = unescape(cookieArr[i].split("YNV1_auth=")[1]);
+										break
+									}
+								}
+							}
+							//嵌入互动讨论页面
+							$("#chatRoom iframe").attr("src",domain+"/chat/room/chat?room_id="+video_id+"&token="+$scope.token)
+							console.log($scope.token)
+							if(!$scope.token||$scope.token==undefined||$scope.token==""||!$scope.userid||$scope.userid==undefined||$scope.userid==""){
+								//如果url没有带token，且cookie里没有auth 则隐藏其他功能 只留视频播放器
+//								console.log("only player")
+								$scope.noToken = true
+								console.log($scope.token)
+							}else{
+						        // 连接服务端
+						        var socket = io('http://122.225.51.163:29080');
+						        							
+								// 连接后登录
+								socket.on('connect', function(){
+						            socket.emit('login', $scope.userid);
+						        });
+						        // 后端推送来消息时
+						        socket.on('new_msg', function(msg){
+						        		//console.log(msg)
+						        		if(msg.search("offline")!=-1&&msg.search($scope.username)!=-1){
+						        			window.close();
+						        			window.location.href="about:blank";
+						        		}
+						        });
+						        // 后端推送来在线数据时
+						        socket.on('update_online_count', function(online_stat){
+						            //console.log(online_stat)
+						        });
+						        console.log(00)
+							}
+							$scope.getVideo()
+						}
+					}
+				});
+			}
+			$scope.auth()
+			
+			// 获取提问列表
+			$scope.totalpage = 0
+			$scope.getComments = function(page ,limit ,cq_key_id ,cq_key_type ){
+				console.log(arguments)
+				$.ajax({
+					type:"post",
+					url:domain+"/comment/question/index",
+					async:false,
+					dataType:"json",
+					data:{
+						token : $scope.token,
+						page : page,
+						limit : limit,
+						cq_key_id : cq_key_id,
+						cq_key_type: cq_key_type
+					},
+					success:function(res){
+//						console.log(res)
+						$scope.q_totalrows = res.data.total_rows
+//						console.log($scope.q_totalrows )
+						$scope.totalpage = Math.ceil(res.data.total_rows/10)
+//						console.log("$scope.totalpage="+$scope.totalpage)
+						if(res.data.page_data.length>0){
+							$scope.comment_list = res.data.page_data
+						}else{
+							$scope.comment_list = []
+						}
+						$scope.$apply()
+					}
+				});
+			}
+			
+			//发表提问
+			$scope.subComment= function(){
+				console.log($("#commentArea").val())
+				$.ajax({
+					type:"post",
+					url:domain+"/comment/question/add",
+					async:true,
+					dataType:"json",
+					data:{
+						token:$scope.token,//提问用户token
+					    comment_question: {
+					        cq_key_id: parseInt($scope.cq_key_id),     		//课程主键编号
+					        cq_key_type: 1,		 	//课程类型 1是直播,2是点播,3是微课 ,4是家庭教育
+					        cq_content: $("#commentArea").val()     //提问内容
+    						}
+					},
+					success:function(res){
+						console.log(res)
+						ca_id = res.data.ca_id
+						$("#commentArea").val("")
+						// 获取评论列表函数执行
+						$scope.getComments(1 ,10 ,$scope.cq_key_id ,1);
+						if(res.code==1){
+							alert("回复成功！");
+							$("body").scrollTop(920);
+							$scope.reply_2lv_list[0]=[]
+							$("ul.reply_2lv_"+ca_id).css("display","none")
+						}else{
+							alert("回复失败！");
+						}
+					}
+				});
+			}
+			$scope.reply_2lv_list = []
+			$scope.getSecReplyInit = [true,true,true,true,true,true,true,true,true,true]
+			// 获取回答列表
+			$scope.getSecReply = function(index, page, limit, cq_key_id, cq_key_type, cq_pid,ca_id){
+				$("ul.reply_2lv_"+ca_id).css("display","block")
+				$.ajax({
+					type:"post",
+					url:domain+"/comment/question/index",
+					async:true,
+					dataType:"json",
+					data:{
+						page:page,
+						limit:limit,
+						cq_key_id:cq_key_id,
+						cq_key_type:cq_key_type,
+						cq_pid:ca_id
+					},
+					success:function(res){
+						//console.log(res)
+						var a_totalrows = parseInt(res.data.total_rows)
+						//console.log("total",a_totalrows)
+						if(res.data.page_data.length>0){
+							$scope.reply_2lv_list[index] = res.data.page_data
+//							console.log($scope.reply_2lv_list)
+//							console.log(index)
+						}else{
+							$scope.reply_2lv_list[index] = []
+						}
+						//分页
+						if(a_totalrows>0){
+							var paginationModel2lv = {
+								//totalPages: $scope.totalpage2lv,
+						        totalCounts:a_totalrows,
+						        pageSize:10,
+						        visiblePages: 5,
+						        currentPage: 1,
+						        onPageChange: function (num, type) {
+						            $('#p1').text(type + '：' + num);
+						            // 点击分页符重新检索列表
+						            $scope.getSecReply(index, num, 10, cq_key_id, cq_key_type, cq_pid,ca_id)
+						        }
+						    }
+							if($scope.getSecReplyInit[index]){
+								$.jqPaginator('#pagination2lv_'+ca_id, paginationModel2lv);	
+								$scope.getSecReplyInit[index] = !$scope.getSecReplyInit[index]
+							}
+						}
+						$scope.$apply()
+					}
+				});
+			}
+			//收起回答列表
+			$scope.rollUpRply = function(ca_id){
+				$("ul.reply_2lv_"+ca_id).css("display","none")
+			}
+			//发表回答评论
+			$scope.subComment2lv = function(index,cq_key_id,cq_key_type,cq_pid,ca_id){
+				var content = $("textarea.reply_2lv_textarea_"+ca_id).val()
+//				console.log(content)
+				$.ajax({
+					type:"post",
+					url:domain+"/comment/question/add",
+					async:true,
+					dataType:"json",
+					data:{
+						token:$scope.token,
+						comment_question:{
+							cq_key_id:cq_key_id,
+							cq_key_type:cq_key_type,
+							cq_content:content,
+							cq_pid:ca_id
+						}
+					},
+					success:function(res){
+						console.log(res)
+						$scope.getSecReply(index, 1, 10, cq_key_id, cq_key_type, cq_pid,ca_id)
+						$("textarea.reply_2lv_textarea_"+ca_id).val("")
+											
+						if(res.code==1){
+							alert("回答成功！")
+						}else{
+							alert("回答失败！")
+						}
+						$scope.$apply()
+					}
+				});
+			}
+			
+			//点赞
+			$scope.clickGood = function(ca_id,is_set_good,obj){
+				if(is_set_good!=0){
+					alert("您已赞过！")
+					return
+				}
+				$.ajax({
+					type:"post",
+					url:domain+"/comment/question/setgood",
+					async:true,
+					dataType:"json",
+					data:{
+						token:$scope.token,
+						ca_id:ca_id
+					},
+					success:function(res){
+//						console.log(res)
+						if(res.code==1){
+							obj.good_num++
+							obj.is_set_good=1
+							$scope.$apply()
+							alert("点赞成功！")
+						}else{
+							alert("点赞失败！")
+						}
+							
+					}
+				});
+			}
+			
+		})
+	</script>
+	<script src="https://s22.cnzz.com/z_stat.php?id=1264448747&web_id=1264448747" language="JavaScript"></script>
+</html>

@@ -1,0 +1,159 @@
+/*index.css         */
+/*@copyright = boz  */
+/*2017-02-14 shenjie*/
+
+section{
+	width: 1000px;
+	height: auto;
+	margin: 0px auto;
+	/*background: darkcyan;*/
+	overflow: hidden;
+}
+
+div#swiper{
+	width: 1000px;
+	height: 432px;
+	background: pink;
+	overflow: hidden;
+}
+div#moreLive{
+	width: 1000px;
+	height: 60px;
+	padding-left: 530px;
+	padding-top: 20px;
+	margin-top: 40px;
+	/*background: pink;*/
+	
+}
+div#moreLive>span{
+	margin-right: 40px;
+}
+.swiper-container {
+    width: 950px;
+    height: 432px;
+    float: left;
+}
+ul.swiper-min{
+	width: 250px;
+	height: 432px;
+	float: left;
+}
+ul.swiper-min>li{
+	width: 250px;
+	height: 108px;
+}
+ul.swiper-min>li>img{
+	width: 250px;
+	height: 108px;
+}
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+ul#liveShow{
+	width: 1000px;
+	height: auto;
+	overflow: hidden;
+	margin-top: 20px;
+}
+
+ul#liveShow>li{
+	width: 285px;
+	height: 257px;
+	background: #FFF;
+	float: left;
+	margin-bottom: 20px;
+	overflow: hidden;
+	padding: 10px;
+}
+
+ul#liveShow>li:nth-child(4n-2),ul#liveShow>li:nth-child(4n-1),ul#liveShow>li:nth-child(4n){
+	margin-left: 20px;
+}
+
+ul#liveShow>li>div.up{
+	width:265px;
+	height: 167px;
+	/*background: green;*/
+}
+
+ul#liveShow>li>div.up>img{
+	width:265px;
+	height: 167px;
+}
+
+ul#liveShow>li>div.mid{
+	width:265px;
+	height: 40px;
+	/*background: palegreen;*/
+	line-height: 40px;
+	font-size: 20px;
+}
+
+ul#liveShow>li>div.btm{
+	width:265px;
+	height: 20px;
+	/*background: palegreen;*/
+	line-height: 20px;
+	/*font-size: 20px;*/
+}
+ul#liveShow>li>div.btm>div{
+	float: left;
+}
+
+
+#intro{
+	width: 1000px;
+	padding: 20px;
+}
+#work{
+	width: 1000px;
+	/*padding: 20px;*/
+}
+
+.VContain{
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+}
+.video.bg{
+	height: 570px;
+	width: 1000px;
+	/*position: absolute;*/
+	left: 0;
+	top: 0;
+	z-index: 0;
+}
+.video.sm{
+	height: 120px;
+	width: 200px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 99999999;
+}
+#modeHand{
+	height: 40px;
+	width: 40px;
+	background: red;
+	z-index: 99999;
+	background: url(../img/LRmove.png) no-repeat;
+	background-size: 100% 100%;
+	cursor: pointer;
+}

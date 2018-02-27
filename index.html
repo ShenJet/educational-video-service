@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html ng-app="indexApp" ng-controller="indexCtrl">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-control" content="no-cache">
+		<meta http-equiv="Cache" content="no-cache">
+		<title>首页</title>
+		<link rel="stylesheet" type="text/css" href="css/initialize.css"/>
+		<link rel="stylesheet" type="text/css" href="css/header.css"/>
+		<link rel="stylesheet" type="text/css" href="css/footer.css"/>
+		<link rel="stylesheet" type="text/css" href="css/index.css"/>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/swiper.min.css"/>
+		<link rel="Shortcut Icon" href="favicon.ico" >
+		<script type="text/javascript" src="js/domain.js"></script>
+		<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/angular.min.js"></script>
+		<script type="text/javascript" src="js/swiper.min.js"></script>
+		<script type="text/javascript" src="js/require.js"></script>
+		<script type="text/javascript" src="js/public.js"></script>
+	</head>
+	<style type="text/css">
+		span.btn1icon{
+			background: url(img/header/btn1_w.png) no-repeat;
+		}
+		span.btn2icon{
+			background: url(img/header/btn2.png) no-repeat;
+		}
+		span.btn3icon{
+			background: url(img/header/btn3.png) no-repeat;
+		}
+		span.btn4icon{
+			background: url(img/header/btn4.png) no-repeat;
+		}
+		.mid{
+			overflow : hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+		}
+	</style>
+	<body>
+		<!--header-->
+		<ng-include src="'template/header.html'"></ng-include>
+		<!--section-->
+		<section>
+			<div id="swiper">
+				<!--大幅轮播-->
+				<div class="swiper-container">
+			        <div class="swiper-wrapper">
+			        		<div ng-repeat = "x in lunbos" class="swiper-slide" ng-click="toLivePlay(x.ad_link)" style="cursor: pointer;">
+			        			<img ng-src="{{x.ai_path}}" style="width: 100%;height: 100%;"/>
+			        		</div>
+			        </div>
+			        <!-- Pagination -->
+			        <div class="swiper-pagination"></div>
+    				</div>
+    				<!--侧边小轮播-->
+    				<ul class="swiper-min">
+    					<li ng-repeat = "y in lunbos01" class="lunbos01" ng-click="toLivePlay(y.ad_link)" style="cursor: pointer;">
+    						<img ng-src="{{y.ai_path}}" style="width: 100%;height: 100%;"/>
+    						<p style="color: #9B9B9B;">{{y.ai_name}}</p>
+			        	</li>
+    				</ul>
+			</div>
+			<div id="moreLive">
+				<span style="font-size: 20px;">精品直播</span><a href="live.html" style="color: #4154E8;">更多</a>
+				
+			</div>
+			<p style="width: 1000px;height: auto;text-align: center;"></p>
+			<ul class="liveShow">
+				<li ng-click='toLivePlay(x.lc_id)' ng-repeat="x in livelist">
+					<div class="up">
+						<img ng-src="{{x.lc_img}}"/>
+					</div>
+					<div class="mid">{{x.lc_abstract}}</div>
+					<div class="btm">
+						<div class="btm1">
+							<img src="img/live/teacher_icon.png" class="list_icon"/>
+							{{x.lc_teacher}}
+						</div>
+						<div class="btm2">
+							<img src="img/live/eye_icon.png" class="list_icon"/>
+							{{x.lc_choose_num}}
+						</div>
+					</div>
+					<div class="btm3">
+						<img src="img/live/date_icon.png" class="list_icon"/>
+						{{ x.lc_start_time * 1000 | date:'MM/dd hh:mm' }} - {{ x.lc_end_time * 1000 | date:'HH:mm' }}
+					</div>
+				</li>
+			</ul>
+			
+			
+			<div id="moreLive">
+				<span style="font-size: 20px;">热门点播</span><a href="demand.html" style="color: #4154E8;">更多</a>
+				
+			</div>
+			<p style="width: 1000px;height: auto;text-align: center;"></p>
+			<ul class="liveShow">
+				<li ng-click='toDemandPlay(x.dc_id)' ng-repeat="x in demandlist">
+					<div class="up">
+						<img ng-src="{{x.dc_img}}"/>
+					</div>
+					<div class="mid">{{x.dc_title}}</div>
+					<div class="btm">
+						<div class="btm1">
+							<img src="img/live/teacher_icon.png" class="list_icon"/>
+							{{x.dc_teacher}}
+						</div>
+						<div class="btm2">
+							<img src="img/live/eye_icon.png" class="list_icon"/>
+							{{x.dc_demand_num}}
+						</div>
+					</div>
+					<div class="btm3">
+						<img src="img/live/date_icon.png" class="list_icon"/>
+						{{ x.create_dateline * 1000 | date:'MM/dd hh:mm' }}
+					</div>
+				</li>
+			</ul>
+			
+			<div id="moreLive">
+				<span style="font-size: 20px;">家庭教育</span><a href="home-edu.html" style="color: #4154E8;">更多</a>
+				
+			</div>
+			<p style="width: 1000px;height: auto;text-align: center;"></p>
+			<ul class="liveShow">
+				<li ng-click='toHomeeduPlay(x.he_id)' ng-repeat="x in homeedulist" style="height: 214px;">
+					<div class="up">
+						<img ng-src="{{x.he_img}}"/>
+					</div>
+					<div class="mid">{{x.he_abstract}}</div>
+					<div class="btm">
+						<div class="btm1">
+							<img src="img/live/eye_icon.png" class="list_icon"/>
+							{{x.he_demand_num}}
+						</div>
+						<div class="btm2">
+							<img src="img/live/date_icon.png" class="list_icon"/>
+							{{ x.create_dateline * 1000 | date:'MM/dd hh:mm' }}
+						</div>
+					</div>
+				</li>
+			</ul>
+			
+		</section>
+		
+		<!--footer-->
+		<ng-include src="'template/footer.html'"></ng-include>
+		
+	</body>
+	<!--<script type="text/javascript" src="js/header.js"></script>-->
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript">
+		var indexApp = angular.module("indexApp",[])
+		indexApp.controller("indexCtrl",function($scope,$http){
+			
+			//get session storage
+			if(sessionStorage.getItem('username',$scope.username)){
+				$scope.userinfo = {
+				username:sessionStorage.getItem('username'),
+				token:sessionStorage.getItem('token'),
+				user_id:sessionStorage.getItem('user_id'),
+				user_phone:sessionStorage.getItem('user_phone'),
+				user_role_id:sessionStorage.getItem('user_role_id'),
+				ischeck:sessionStorage.getItem('ischeck'),
+				create_dateline:sessionStorage.getItem('create_dateline'),
+				modify_dateline:sessionStorage.getItem('modify_dateline'),
+				avatar:sessionStorage.getItem('user_avatar'),
+				realname:sessionStorage.getItem('realname')
+			}
+			}else{
+				// alert('请先登录~')
+				window.location='login.html'
+				$scope.userinfo = {
+					username:'用户未登录',
+					avatar:'img/login/default_avatar.png'
+				}
+			}	
+			//退出
+			$scope.exit = function(){
+				sessionStorage.clear()
+				$scope.userinfo = {
+					username:'用户未登录',
+					avatar:'img/login/default_avatar.png'
+				}
+				window.location= "login.html"
+			}
+			//搜索功能 搜索目标是课程title
+			$scope.search = function(){
+				if($("input.search-input").val()){
+					window.location = "searchres.html?content=" + $("input.search-input").val()
+				}else{
+					alert("请输入搜索内容")
+				}
+			}
+			//点击播放搜索结果
+			$scope.toPlaySearch = function(id){
+				$("#search_res").css("display","none")
+				window.location="live_play.html?video_id="+id
+			}
+			
+			//个人空间
+			$scope.toMyspace = function(){
+				if($scope.userinfo.username && $scope.userinfo.username!= "" && $scope.userinfo.username != "用户未登录"){
+					$.ajax({
+						type:"post",
+						url:domain+"/live_sns/mysns.php",
+						async:true,
+						data:{
+							user_id:$scope.userinfo.user_id,
+							token:$scope.userinfo.token,
+							client:2
+						},
+						dataType:'json',
+						success:function(res){
+						}
+					});
+					window.location=domain+"/live_sns/mysns.php?user_id="+$scope.userinfo.user_id+"&client=2";
+				}else{
+					alert("用户尚未登录，请先登录。")
+					window.location="login.html"
+				}
+			}
+			
+			// 轮播图获取
+			$http({
+					method:"get",
+					url:domain+"/ad/info/index?id=6"
+				}).then(function (response){
+					$scope.lunbos = []
+					$scope.lunbos01 = []
+					for(var i=0;i<4;i++){
+						$scope.lunbos.push(response.data.data.page_data[i])
+					}
+					
+					for(var i=4;i<8;i++){
+						$scope.lunbos01.push(response.data.data.page_data[i])
+					}
+				},function (response){
+					
+			})
+			
+			//点击轮播图转到直播播放页面
+			$scope.toLivePlay = function(ad_link){
+				$.ajax({
+					type:"post",
+					url:domain+"/live/course/check_start",
+					async:true,
+					dataType:"json",
+					data:{
+						id:ad_link,
+						token:$scope.userinfo.token,
+						mod:"live",
+						action:"course",
+						do:"check_start",
+						api:"json"
+					},
+					success:function(res){
+						console.log(res)
+						if(res.code != "1"){
+							alert("直播尚未开始~")
+						}else{
+							window.location="live_play.html?video_id="+ad_link;
+						}
+					}
+				});
+			}
+			$scope.toLivePlay0 = function(){
+				alert("直播间暂未开放，敬请期待~")
+			}
+			//点击轮播图转到点播播放页面
+			$scope.toDemandPlay = function(id){
+				window.location="demand_play.html?video_id="+id
+			}
+			//点击轮播图转到家教播放页面
+			$scope.toHomeeduPlay = function(id){
+				window.location="homeedu_play.html?video_id="+id
+			}
+			
+			//定义页面跳转
+			$scope.toHome = function(){
+				window.location = "index.html"
+			}
+			$scope.toLive = function(){
+				window.location = "live.html"
+			}
+			$scope.toDemand = function(){
+				window.location = "demand.html"
+			}
+			$scope.toHomeEdu = function(){
+				window.location = "home-edu.html"
+			}
+			//直播列表获取
+			$scope.getLiveList = function(){
+				$.ajax({
+					type:"post",
+					url:domain+"/live/course/index",
+					async:true,
+					dataType:'json',
+					data:{
+						page:1,
+						limit:4,	
+						token:$scope.userinfo.token
+					},
+					success:function(res){
+						//console.log(res)
+						$scope.livelist = res.data.page_data
+						console.log(res.data.page_data)
+						$scope.$apply()
+					}
+				});
+			}
+			$scope.getLiveList()
+			
+			//点播列表获取
+			$scope.getDemandList = function(){
+				$.ajax({
+					type:"post",
+					url:domain+"/demand/course/index",
+					async:true,
+					dataType:'json',
+					data:{
+						page:1,
+						limit:4,	
+						token:$scope.userinfo.token
+					},
+					success:function(res){
+						
+						$scope.demandlist = res.data.page_data
+						console.log($scope.demandlist)
+						$scope.$apply()
+					}
+				});
+			}
+			$scope.getDemandList()
+			
+			//家庭教育列表获取
+			$scope.getHomeEduList = function(){
+				$.ajax({
+					type:"post",
+					url:domain+"/home/edu/index",
+					async:true,
+					dataType:'json',
+					data:{
+						page:1,
+						limit:4,	
+						he_cate_id:1,
+						token:$scope.userinfo.token
+					},
+					success:function(res){
+						
+						$scope.homeedulist = res.data.page_data
+						console.log($scope.homeedulist)
+						$scope.$apply()
+					}
+				});
+			}
+			$scope.getHomeEduList()
+			
+		})
+	</script>
+	<script src="https://s22.cnzz.com/z_stat.php?id=1264448747&web_id=1264448747" language="JavaScript"></script>
+</html>
